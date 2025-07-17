@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nalanda Chess Academy</title>
+    
+    <!-- Tailwind CSS CDN for easy styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome for icons -->
+    <!-- Used for social login icons (e.g., Google) and potentially other UI elements. -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Chess.js for chess logic -->
+    <!-- A JavaScript library that handles the rules of chess (moves, check, checkmate, etc.). -->
+    <script src="https://unpkg.com/chess.js@1.0.0-beta.7/chess.min.js"></script>
+    
+    <!-- chessboard.js for board visualization -->
+    <!-- A JavaScript library for displaying and interacting with a chess board visually. -->
+    <script src="https://unpkg.com/@chrisoakley/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/@chrisoakley/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css">
+</head>
+<body class="bg-gray-100 font-sans antialiased flex flex-col min-h-screen">
+    <!-- Header Section -->
+    <!-- This section contains the site logo, title, and main navigation. -->
+    <!-- It uses a gradient background, padding, and shadow for visual appeal. -->
+    <header class="bg-gradient-to-r from-purple-700 to-indigo-800 text-white p-4 shadow-xl">
+        <!-- Container for header content, centered and responsive. -->
+        <!-- Flexbox is used to arrange items, stacking on small screens (flex-col) and becoming a row on larger screens (sm:flex-row). -->
+        <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center">
+            <!-- Logo and Site Title Group -->
+            <div class="flex items-center mb-4 sm:mb-0">
+                <!-- Logo Image -->
+                <!-- IMPORTANT: Replace 'src' with your actual Firebase Storage logo URL. -->
+                <!-- Tailwind classes for sizing, margin, rounded corners, and shadow. -->
+                <img src="https://placehold.co/40x40/8B5CF6/FFFFFF?text=Logo" alt="Nalanda Chess Academy Logo" class="h-10 w-auto mr-3 rounded-md shadow-lg">
+                <!-- Site Title -->
+                <h1 class="text-3xl font-extrabold rounded-md p-2 bg-white bg-opacity-20">Nalanda Chess Academy</h1>
+            </div>
+            <!-- Navigation Menu -->
+            <nav class="w-full sm:w-auto">
+                <!-- Unordered list for navigation links. -->
+                <!-- Flexbox arranges links, stacking on small screens (flex-col) and becoming a row on larger screens (sm:flex-row). -->
+                <ul class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-6 text-center">
+                    <li><a href="#" id="home-link" class="block py-2 px-4 hover:text-purple-200 transition duration-300 rounded-md hover:bg-white hover:bg-opacity-10">Home</a></li>
+                    <li><a href="#" id="play-link" class="block py-2 px-4 hover:text-purple-200 transition duration-300 rounded-md hover:bg-white hover:bg-opacity-10">Play</a></li>
+                    <li><a href="#" id="profile-link" class="block py-2 px-4 hover:text-purple-200 transition duration-300 rounded-md hover:bg-white hover:bg-opacity-10">Profile</a></li>
+                    <li><button id="auth-button" class="w-full sm:w-auto bg-white text-purple-700 px-6 py-2 rounded-full shadow-lg hover:bg-purple-100 transition duration-300 font-semibold transform hover:scale-105">Login</button></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <!-- This section will dynamically display different content sections (Home, Play, Profile) via JavaScript. -->
+    <main class="container mx-auto p-4 sm:p-8 flex-grow flex flex-col items-center justify-center">
+        <!-- Home Section -->
+        <!-- Default visible section, welcoming users. -->
+        <section id="home-section" class="page-section text-center bg-white p-8 rounded-lg shadow-2xl max-w-2xl w-full">
+            <h2 class="text-4xl font-extrabold text-gray-800 mb-6">Welcome to Nalanda Chess Academy!</h2>
+            <p class="text-lg text-gray-600 mb-8 leading-relaxed">
+                Challenge friends or test your skills against a powerful computer engine.
+                Experience real-time gameplay and track your progress.
+            </p>
+            <button id="start-playing-button" class="bg-purple-600 text-white px-8 py-4 rounded-full text-xl font-bold shadow-xl hover:bg-purple-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-purple-300">Start Playing</button>
+        </section>
+
+        <!-- Play Section (Chess Board & Controls) -->
+        <!-- This section will contain the chess board and game control buttons. Initially hidden. -->
+        <section id="play-section" class="page-section hidden flex flex-col items-center justify-center bg-white p-6 sm:p-8 rounded-lg shadow-2xl w-full max-w-2xl">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">Current Game</h2>
+            <!-- Chessboard.js container -->
+            <div id="board" class="w-full max-w-xl bg-gray-200 rounded-lg shadow-2xl overflow-hidden border-4 border-gray-300"></div>
+            <!-- Game Control Buttons -->
+            <!-- Uses flexbox for layout, stacking on small screens and becoming a row on larger screens. -->
+            <div class="mt-6 flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 w-full justify-center">
+                <button id="new-game-button" class="bg-green-600 text-white px-6 py-3 rounded-full shadow-lg hover:bg-green-700 transition duration-300 font-semibold transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300">New Game</button>
+                <button id="undo-move-button" class="bg-yellow-500 text-white px-6 py-3 rounded-full shadow-lg hover:bg-yellow-600 transition duration-300 font-semibold transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-yellow-300">Undo Last Move</button>
+                <!-- Placeholder for Engine Move Button - functionality will be added in script.js -->
+                <button id="engine-move-button" class="bg-blue-500 text-white px-6 py-3 rounded-full shadow-lg hover:bg-blue-600 transition duration-300 font-semibold transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300">Engine Move</button>
+            </div>
+            <!-- Game Status Display -->
+            <p id="game-status" class="mt-4 text-lg font-semibold text-gray-700 text-center"></p>
+        </section>
+
+        <!-- Profile Section -->
+        <!-- Displays user profile information. Initially hidden. -->
+        <section id="profile-section" class="page-section hidden bg-white p-8 rounded-lg shadow-xl max-w-md w-full">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">User Profile</h2>
+            <div id="profile-info" class="text-lg text-gray-700 space-y-3">
+                <p><span class="font-semibold text-purple-700">User ID:</span> <span id="profile-uid">Not logged in</span></p>
+                <p><span class="font-semibold text-purple-700">Email:</span> <span id="profile-email">Not logged in</span></p>
+                <p><span class="font-semibold text-purple-700">Display Name:</span> <span id="profile-display-name">N/A</span></p>
+                <!-- More profile details can be added here (e.g., win/loss record, avatar) -->
+            </div>
+        </section>
+
+        <!-- Authentication Modal -->
+        <!-- A modal dialog for user login and registration. Initially hidden. -->
+        <div id="auth-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 hidden z-50">
+            <!-- Modal content container with styling and animation. -->
+            <div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-sm relative transform scale-95 transition-transform duration-300 ease-out" id="auth-modal-content">
+                <!-- Close button for the modal. -->
+                <button id="close-auth-modal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-3xl font-bold leading-none">&times;</button>
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">Login / Register</h3>
+                <!-- Email/Password Form -->
+                <form id="email-password-form" class="space-y-4">
+                    <div>
+                        <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+                        <input type="email" id="email" class="shadow-sm appearance-none border border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent" placeholder="Enter your email">
+                    </div>
+                    <div>
+                        <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password:</label>
+                        <input type="password" id="password" class="shadow-sm appearance-none border border-gray-300 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent" placeholder="Enter your password">
+                    </div>
+                    <button type="submit" id="login-button" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full w-full transition duration-300 shadow-md transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300">Login</button>
+                    <button type="button" id="register-button" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full w-full mt-2 transition duration-300 shadow-md transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-300">Register</button>
+                </form>
+                <div class="text-center my-4 text-gray-600 font-medium">- OR -</div>
+                <!-- Google Login Button -->
+                <button id="google-login-button" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full w-full flex items-center justify-center space-x-2 transition duration-300 shadow-md transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-red-300">
+                    <i class="fab fa-google text-lg"></i>
+                    <span>Sign in with Google</span>
+                </button>
+                <!-- Authentication Message Display -->
+                <p id="auth-message" class="text-center text-sm mt-4 text-red-500"></p>
+            </div>
+        </div>
+
+        <!-- Custom Message Box (instead of alert()) -->
+        <!-- This div serves as a non-intrusive notification system. Initially hidden. -->
+        <div id="message-box" class="fixed bottom-4 right-4 bg-blue-600 text-white px-6 py-3 rounded-lg shadow-xl hidden z-50 transition-all duration-300 transform translate-y-full opacity-0">
+            <span id="message-text"></span>
+            <button id="close-message-box" class="ml-4 text-white font-bold">&times;</button>
+        </div>
+
+    </main>
+
+    <!-- Footer Section -->
+    <!-- Contains copyright information. Positioned at the bottom of the page. -->
+    <footer class="bg-gray-900 text-gray-300 p-4 text-center mt-auto rounded-t-lg shadow-inner">
+        <p>&copy; 2025 Nalanda Chess Academy. All rights reserved.</p>
+    </footer>
+
+    <!-- Firebase SDKs -->
+    <!-- This script loads Firebase libraries and initializes the Firebase app. -->
+    <!-- It uses type="module" to allow ES6 imports and exposes necessary Firebase functions globally. -->
+    <script type="module">
+        // Import the functions you need from the Firebase SDKs
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, onSnapshot, collection, query, where, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        // Your web app's Firebase configuration
+        // IMPORTANT: Replace these placeholder values with your actual Firebase project configuration.
+        // You can find this in your Firebase Console -> Project settings -> Your apps.
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY", // Replace with your API Key
+            authDomain: "YOUR_AUTH_DOMAIN", // Replace with your Auth Domain
+            projectId: "YOUR_PROJECT_ID", // Replace with your Project ID
+            storageBucket: "YOUR_STORAGE_BUCKET", // Replace with your Storage Bucket
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID", // Replace with your Messaging Sender ID
+            appId: "YOUR_APP_ID" // Replace with your App ID
+        };
+
+        // Initialize Firebase app and get service instances
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app); // Authentication service
+        const db = getFirestore(app); // Firestore database service
+
+        // Expose Firebase instances and functions globally for script.js
+        // This is necessary because script.js is a regular script, not a module,
+        // and needs access to these objects.
+        window.firebaseApp = app;
+        window.firebaseAuth = auth;
+        window.firebaseDb = db;
+        window.onAuthStateChanged = onAuthStateChanged;
+        window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+        window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
+        window.signOut = signOut;
+        window.GoogleAuthProvider = GoogleAuthProvider;
+        window.signInWithPopup = signInWithPopup;
+        window.doc = doc;
+        window.setDoc = setDoc;
+        window.getDoc = getDoc;
+        window.onSnapshot = onSnapshot;
+        window.collection = collection;
+        window.query = query;
+        window.where = where;
+        window.updateDoc = updateDoc;
+
+        // Initial authentication state check and UI update
+        // This listener runs whenever the user's authentication state changes (login, logout).
+        onAuthStateChanged(auth, (user) => {
+            const authButton = document.getElementById('auth-button');
+            const profileUid = document.getElementById('profile-uid');
+            const profileEmail = document.getElementById('profile-email');
+            const profileDisplayName = document.getElementById('profile-display-name');
+
+            if (user) {
+                // User is signed in
+                authButton.textContent = 'Logout'; // Change button text
+                profileUid.textContent = user.uid; // Display user ID
+                profileEmail.textContent = user.email || 'N/A'; // Display user email
+                profileDisplayName.textContent = user.displayName || user.email.split('@')[0]; // Display user name or part of email
+                console.log("User logged in:", user.uid);
+            } else {
+                // User is signed out
+                authButton.textContent = 'Login'; // Change button text
+                profileUid.textContent = 'Not logged in'; // Clear profile info
+                profileEmail.textContent = 'Not logged in';
+                profileDisplayName.textContent = 'N/A';
+                console.log("User logged out");
+            }
+        });
+    </script>
+    <!-- Your main application script -->
+    <!-- This script contains the core logic for the website's functionality. -->
+    <script src="script.js"></script>
+	
+	// Firestore Security Rules to prevent unauthorized users from reading or writing to game data
+	// Rules Section TBD
+</body>
+</html>
