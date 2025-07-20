@@ -9,10 +9,16 @@ const homeSection = document.getElementById('home-section');
 const playSection = document.getElementById('play-section');
 const profileSection = document.getElementById('profile-section');
 
-const homeLink = document.getElementById('home-link');
-const playLink = document.getElementById('play-link');
-const profileLink = document.getElementById('profile-link');
-const authButton = document.getElementById('auth-button'); // Button for Login/Logout
+// Desktop Navigation Links and Button
+const homeLinkDesktop = document.getElementById('home-link-desktop');
+const playLinkDesktop = document.getElementById('play-link-desktop');
+const profileLinkDesktop = document.getElementById('profile-link-desktop');
+const authButtonDesktop = document.getElementById('auth-button-desktop'); // Desktop Login/Logout button
+
+// Bottom Navigation Links and Text
+const bottomNavItems = document.querySelectorAll('.bottom-nav-item'); // All bottom navigation links
+const bottomNavAuthText = document.getElementById('bottom-nav-auth-text'); // Text for Login/Logout in bottom nav
+
 const startPlayingButton = document.getElementById('start-playing-button'); // Button on Home section
 
 const authModal = document.getElementById('auth-modal'); // The login/register modal
@@ -125,17 +131,64 @@ function showAuthMessage(message, isError = true) {
 }
 
 /**
- * Controls which main section of the website is visible.
- * Hides all main sections and then shows the specified one.
- * @param {HTMLElement} sectionToShow - The HTML element (section) to make visible.
+ * Switches the active content section and updates active navigation items.
+ * @param {HTMLElement | string} target - The HTML element (section) to show, or its ID string.
  */
-function showSection(sectionToShow) {
+function showSection(target) {
+    let sectionToShow;
+    if (typeof target === 'string') {
+        sectionToShow = document.getElementById(target);
+    } else {
+        sectionToShow = target;
+    }
+
+    // Handle special case for 'auth-modal' which is a modal, not a content section
+    if (sectionToShow && sectionToShow.id === 'auth-modal') {
+        authModal.classList.remove('hidden');
+        authModalContent.classList.remove('scale-95');
+        authModalContent.classList.add('scale-100');
+        // Do not hide other sections or mark nav items active for a modal
+        return;
+    } else {
+        authModal.classList.add('hidden'); // Ensure modal is hidden if navigating to a content section
+    }
+
     // Hide all main content sections
     [homeSection, playSection, profileSection].forEach(section => {
         section.classList.add('hidden');
     });
-    // Show the target section
-    sectionToShow.classList.remove('hidden');
+
+    // Show the target content section
+    if (sectionToShow) {
+        sectionToShow.classList.remove('hidden');
+    }
+
+    // Update active class on desktop navigation links
+    [homeLinkDesktop, playLinkDesktop, profileLinkDesktop].forEach(link => {
+        if (link.dataset.section === sectionToShow.id) {
+            link.classList.add('bg-white', 'bg-opacity-10');
+        } else {
+            link.classList.remove('bg-white', 'bg-opacity-10');
+        }
+    });
+
+    // Update active class on bottom navigation items
+    bottomNavItems.forEach(item => {
+        if (item.dataset.section === sectionToShow.id) {
+            item.classList.add('active');
+        } else {
+            item.classList.remove('active');
+        }
+    });
+
+    // Specific logic for Play section
+    if (sectionToShow.id === 'play-section' && currentUser) {
+        initBoard();
+        listenForGameUpdates();
+    } else if (gameUnsubscribe) {
+        gameUnsubscribe(); // Stop listening if leaving play section
+        gameUnsubscribe = null;
+    }
 }
 
 /**
@@ -186,7 +239,7 @@ function onDrop(source, target) {
     const move = game.move({
         from: source,
         to: target,
-        promotion: 'q'
+        promotion: 'q' // Always promote to queen for simplicity. In a real game, prompt user.
     });
 
     // If the move is null, it means it's an illegal move according to chess.js rules
@@ -312,7 +365,7 @@ async function updateFirestoreGame(fen) {
             fen: fen,
             lastUpdated: new Date(),
             playerUid: currentUser.uid, // Store the UID of the player for this game
-        }, { merge: true });
+        }, { merge: true }); // `merge: true` ensures that only specified fields are updated
         console.log("Game state updated in Firestore.");
     } catch (error) {
         console.error("Error updating game state in Firestore:", error);
@@ -370,33 +423,70 @@ function listenForGameUpdates() {
 // --- Event Listeners ---
 // Attach event listeners to various UI elements to handle user interactions.
 
-// Navigation Links
-homeLink.addEventListener('click', (e) => {
-    e.preventDefault(); // Prevent default link behavior (page reload)
-    showSection(homeSection); // Show the home section
+// Desktop Navigation Links
+homeLinkDesktop.addEventListener('click', (e) => {
+    e.preventDefault();
+    showSection('home-section');
 });
 
-playLink.addEventListener('click', (e) => {
+playLinkDesktop.addEventListener('click', (e) => {
     e.preventDefault();
     if (currentUser) {
-        showSection(playSection); // Show the play section if logged in
+        showSection('play-section'); // Show the play section if logged in
         initBoard(); // Initialize the board if it hasn't been already
         listenForGameUpdates(); // Start listening for game updates
     } else {
-        showMessageBox('Please log in to play chess.', 'error'); // Prompt login if not authenticated
-        authModal.classList.remove('hidden'); // Show the authentication modal
+        showMessageBox('Please log in to play chess.', 'error');
+        showSection('auth-modal'); // Show auth modal
     }
 });
 
-profileLink.addEventListener('click', (e) => {
+profileLinkDesktop.addEventListener('click', (e) => {
     e.preventDefault();
     if (currentUser) {
-        showSection(profileSection); // Show the profile section if logged in
+        showSection('profile-section'); // Show the profile section if logged in
     } else {
-        showMessageBox('Please log in to view your profile.', 'error'); // Prompt login if not authenticated
-        authModal.classList.remove('hidden'); // Show the authentication modal
+        showMessageBox('Please log in to view your profile.', 'error');
+        showSection('auth-modal'); // Show auth modal
     }
 });
+
+// Bottom Navigation Items
+bottomNavItems.forEach(item => {
+    item.addEventListener('click', (e) => {
+        e.preventDefault();
+        const sectionId = item.dataset.section; // Get the target section ID from data-section attribute
+        
+        // Special handling for the auth button in bottom nav
+        if (sectionId === 'auth-modal') {
+            if (currentUser) {
+                // If logged in, this button acts as logout
+                signOut(auth).then(() => {
+                    console.log("User signed out successfully.");
+                    showMessageBox("Logged out successfully!", 'success');
+                    currentUser = null;
+                    showSection('home-section'); // Go to home after logout
+                }).catch((error) => {
+                    console.error("Error signing out:", error);
+                    showMessageBox("Error logging out: " + error.message, 'error');
+                });
+            } else {
+                // If logged out, show the auth modal
+                showSection('auth-modal');
+            }
+        } else if (sectionId === 'play-section' && !currentUser) {
+            showMessageBox('Please log in to play chess.', 'error');
+            showSection('auth-modal');
+        } else if (sectionId === 'profile-section' && !currentUser) {
+            showMessageBox('Please log in to view your profile.', 'error');
+            showSection('auth-modal');
+        }
+        else {
+            showSection(sectionId);
+        }
+    });
+});
+
 
 // "Start Playing" button on the Home section
 startPlayingButton.addEventListener('click', () => {
@@ -418,16 +508,13 @@ authButton.addEventListener('click', () => {
             console.log("User signed out successfully.");
             showMessageBox("Logged out successfully!", 'success'); // Success message
             currentUser = null; // Clear the global currentUser variable
-            showSection(homeSection); // Redirect to home page after logout
+            showSection('home-section'); // Redirect to home page after logout
         }).catch((error) => {
             console.error("Error signing out:", error);
             showMessageBox("Error logging out: " + error.message, 'error'); // Error message
         });
     } else {
-        // If no user is logged in, show the authentication modal
-        authModal.classList.remove('hidden');
-        authModalContent.classList.remove('scale-95'); // Reset scale for modal entry animation
-        authModalContent.classList.add('scale-100');
+        showSection('auth-modal');
     }
 });
 
@@ -507,7 +594,7 @@ googleLoginButton.addEventListener('click', async () => {
     }
 });
 
-// New Game Button
+// New Game, Undo, and Engine Move Buttons
 newGameButton.addEventListener('click', startNewGame);
 
 // Undo Move Button
@@ -526,38 +613,46 @@ closeMessageBoxButton.addEventListener('click', hideMessageBox);
 // Listen for authentication state changes globally.
 // This is critical for updating UI elements based on login status.
 onAuthStateChanged(auth, (user) => {
-    currentUser = user; // Update the global currentUser variable
-    if (user) {
-        console.log("Auth state changed: User is logged in", user.uid);
-        // Update profile information in the UI
-        profileUid.textContent = user.uid;
-        profileEmail.textContent = user.email || 'N/A';
-        profileDisplayName.textContent = user.displayName || user.email.split('@')[0]; // Fallback for display name
-        
-        // If the user is on the 'Play' section and the board hasn't been initialized yet,
-        // initialize it and start listening for game updates.
+    currentUser = user; // Update global user variable
+    
+    // Update desktop auth button text
+    authButtonDesktop.textContent = user ? 'Logout' : 'Login';
+    // Update bottom nav auth text
+    bottomNavAuthText.textContent = user ? 'Logout' : 'Login';
+
+    // Update profile info
+    profileUid.textContent = user ? user.uid : 'Not logged in';
+    profileEmail.textContent = user ? (user.email || 'N/A') : 'Not logged in';
+    profileDisplayName.textContent = user ? (user.displayName || user.email.split('@')[0]) : 'N/A';
+
+    console.log("Auth state changed: User is", user ? "logged in" : "logged out", user ? user.uid : "");
+
+    // If user logs in and is currently on the Play section, ensure board is initialized and listening
+    // or if they are on the auth modal and just logged in, redirect them to home
+    if (user && authModal.classList.contains('hidden')) { // If logged in and modal is not active
+        // If current section is play, ensure game is loaded
         if (!playSection.classList.contains('hidden')) {
-             initBoard();
-             listenForGameUpdates();
+            initBoard();
+            listenForGameUpdates();
         }
-    } else {
-        console.log("Auth state changed: User is logged out");
-        // Clear profile information in the UI
-        profileUid.textContent = 'Not logged in';
-        profileEmail.textContent = 'Not logged in';
-        profileDisplayName.textContent = 'N/A';
-        
-        // If there's an active Firestore game listener, unsubscribe from it
-        // when the user logs out to prevent unnecessary operations and potential errors.
-        if (gameUnsubscribe) {
-            gameUnsubscribe();
-            gameUnsubscribe = null; // Clear the unsubscribe function
-        }
+    } else if (user && !authModal.classList.contains('hidden')) { // If logged in and modal IS active
+        // User just logged in via modal, redirect to home
+        showSection('home-section');
+    }
+    else if (!user && !authModal.classList.contains('hidden')) {
+        // User logged out via modal, ensure content is home
+        showSection('home-section');
+    }
+    else if (!user && !homeSection.classList.contains('hidden')) {
+        // If logged out and on home, do nothing
+    }
+    else if (!user) { // If logged out and not on home or modal
+        showSection('home-section'); // Redirect to home
     }
 });
 
 // Initially display the home section when the page loads.
-showSection(homeSection);
+showSection('home-section');
 
 // The chessboard initialization and game update listening are now tied
 // to user login and navigation to the 'Play' section, ensuring resources

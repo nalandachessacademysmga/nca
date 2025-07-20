@@ -29,36 +29,30 @@
     <!-- This section contains the site logo, title, and main navigation. -->
     <!-- It uses a gradient background, padding, and shadow for visual appeal. -->
     <header class="bg-gradient-to-r from-purple-700 to-indigo-800 text-white p-4 shadow-xl">
-        <!-- Container for header content, centered and responsive. -->
-        <!-- Flexbox is used to arrange items, stacking on small screens (flex-col) and becoming a row on larger screens (sm:flex-row). -->
-        <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center">
-            <!-- Logo and Site Title Group -->
-            <div class="flex items-center mb-4 sm:mb-0">
-                <!-- Logo Image -->
-                <!-- IMPORTANT: Replace 'src' with your actual Firebase Storage logo URL. -->
-                <!-- Tailwind classes for sizing, margin, rounded corners, and shadow.    -->
-				<img src="https://firebasestorage.googleapis.com/v0/b/nalandachessacademy-474db.firebasestorage.app/o/App_assets%2Flogo.png?alt=media&token=023369a4-c43f-4278-8106-f21bcf2a350d" alt="Nalanda Chess Academy Logo" class="h-10 w-auto mr-3 rounded-md shadow-lg">                
-				
-				<!-- Site Title -->
+        <div class="container mx-auto flex justify-between items-center">
+            <!-- Logo and Site Title -->
+            <div class="flex items-center">
+                <!-- IMPORTANT: Replace with your actual Firebase Storage logo URL -->
+                <img src="https://firebasestorage.googleapis.com/v0/b/nalandachessacademy-474db.firebasestorage.app/o/App_assets%2Flogo.png?alt=media&token=023369a4-c43f-4278-8106-f21bcf2a350d" alt="Nalanda Chess Academy Logo" class="h-10 w-auto mr-3 rounded-md shadow-lg">                
                 <h1 class="text-3xl font-extrabold rounded-md p-2 bg-white bg-opacity-20">Nalanda Chess Academy</h1>
             </div>
-            <!-- Navigation Menu -->
-            <nav class="w-full sm:w-auto">
-                <!-- Unordered list for navigation links. -->
-                <!-- Flexbox arranges links, stacking on small screens (flex-col) and becoming a row on larger screens (sm:flex-row). -->
-                <ul class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-6 text-center">
-                    <li><a href="#" id="home-link" class="block py-2 px-4 hover:text-purple-200 transition duration-300 rounded-md hover:bg-white hover:bg-opacity-10">Home</a></li>
-                    <li><a href="#" id="play-link" class="block py-2 px-4 hover:text-purple-200 transition duration-300 rounded-md hover:bg-white hover:bg-opacity-10">Play</a></li>
-                    <li><a href="#" id="profile-link" class="block py-2 px-4 hover:text-purple-200 transition duration-300 rounded-md hover:bg-white hover:bg-opacity-10">Profile</a></li>
-                    <li><button id="auth-button" class="w-full sm:w-auto bg-white text-purple-700 px-6 py-2 rounded-full shadow-lg hover:bg-purple-100 transition duration-300 font-semibold transform hover:scale-105">Login</button></li>
+            <!-- Desktop Navigation (visible on medium screens and up, hidden on small screens) -->
+            <nav class="hidden md:block">
+                <ul class="flex space-x-6 text-center">
+                    <li><a href="#" id="home-link-desktop" data-section="home-section" class="block py-2 px-4 hover:text-purple-200 transition duration-300 rounded-md hover:bg-white hover:bg-opacity-10">Home</a></li>
+                    <li><a href="#" id="play-link-desktop" data-section="play-section" class="block py-2 px-4 hover:text-purple-200 transition duration-300 rounded-md hover:bg-white hover:bg-opacity-10">Play</a></li>
+                    <li><a href="#" id="profile-link-desktop" data-section="profile-section" class="block py-2 px-4 hover:text-purple-200 transition duration-300 rounded-md hover:bg-white hover:bg-opacity-10">Profile</a></li>
+                    <li><button id="auth-button-desktop" class="w-full sm:w-auto bg-white text-purple-700 px-6 py-2 rounded-full shadow-lg hover:bg-purple-100 transition duration-300 font-semibold transform hover:scale-105">Login</button></li>
                 </ul>
             </nav>
+            <!-- Placeholder for mobile header if needed, otherwise just balances flex-between -->
+            <div class="md:hidden"></div> 
         </div>
     </header>
 
-    <!-- Main Content Area -->
-    <!-- This section will dynamically display different content sections (Home, Play, Profile) via JavaScript. -->
-    <main class="container mx-auto p-4 sm:p-8 flex-grow flex flex-col items-center justify-center">
+    <!-- Main Content Area - Sections will be toggled via JS -->
+    <!-- Added pb-20 to ensure content is not hidden by the fixed bottom navigation bar on mobile. -->
+    <main class="container mx-auto p-4 sm:p-8 flex-grow flex flex-col items-center justify-center pb-20 md:pb-8">
         <!-- Home Section -->
         <!-- Default visible section, welcoming users. -->
         <section id="home-section" class="page-section text-center bg-white p-8 rounded-lg shadow-2xl max-w-2xl w-full">
@@ -147,6 +141,36 @@
         <p>&copy; 2025 Nalanda Chess Academy. All rights reserved.</p>
     </footer>
 
+    <!-- Bottom Navigation Bar (visible on small screens, hidden on medium screens and up) -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-gray-800 text-white p-2 shadow-lg z-40 md:hidden">
+        <ul class="flex justify-around items-center h-full">
+            <li>
+                <a href="#" data-section="home-section" class="bottom-nav-item flex flex-col items-center text-xs p-2 rounded-md hover:bg-gray-700">
+                    <i class="fas fa-home text-xl mb-1"></i>
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" data-section="play-section" class="bottom-nav-item flex flex-col items-center text-xs p-2 rounded-md hover:bg-gray-700">
+                    <i class="fas fa-chess-board text-xl mb-1"></i>
+                    <span>Play</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" data-section="profile-section" class="bottom-nav-item flex flex-col items-center text-xs p-2 rounded-md hover:bg-gray-700">
+                    <i class="fas fa-user text-xl mb-1"></i>
+                    <span>Profile</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" data-section="auth-modal" class="bottom-nav-item flex flex-col items-center text-xs p-2 rounded-md hover:bg-gray-700">
+                    <i class="fas fa-sign-in-alt text-xl mb-1"></i>
+                    <span id="bottom-nav-auth-text">Login</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
     <!-- Firebase SDKs -->
     <!-- This script loads Firebase libraries and initializes the Firebase app. -->
     <!-- It uses type="module" to allow ES6 imports and exposes necessary Firebase functions globally. -->
@@ -160,12 +184,14 @@
         // IMPORTANT: Replace these placeholder values with your actual Firebase project configuration.
         // You can find this in your Firebase Console -> Project settings -> Your apps.
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY", // Replace with your API Key
-            authDomain: "YOUR_AUTH_DOMAIN", // Replace with your Auth Domain
-            projectId: "YOUR_PROJECT_ID", // Replace with your Project ID
-            storageBucket: "YOUR_STORAGE_BUCKET", // Replace with your Storage Bucket
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID", // Replace with your Messaging Sender ID
-            appId: "YOUR_APP_ID" // Replace with your App ID
+            apiKey: "AIzaSyD86XmFYQOqli4BQsNQERh-kDTYeetAqqM",
+			authDomain: "nalandachessacademy-474db.firebaseapp.com",
+			databaseURL: "https://nalandachessacademy-474db-default-rtdb.asia-southeast1.firebasedatabase.app",
+			projectId: "nalandachessacademy-474db",
+			storageBucket: "nalandachessacademy-474db.firebasestorage.app",
+			messagingSenderId: "30847597506",
+			appId: "1:30847597506:web:05c9013240835edee9745b",
+			measurementId: "G-Z301KFQ12C"
         };
 
         // Initialize Firebase app and get service instances
@@ -197,22 +223,23 @@
         // Initial authentication state check and UI update
         // This listener runs whenever the user's authentication state changes (login, logout).
         onAuthStateChanged(auth, (user) => {
-            const authButton = document.getElementById('auth-button');
+            const authButtonDesktop = document.getElementById('auth-button-desktop');
+            const bottomNavAuthText = document.getElementById('bottom-nav-auth-text'); // For bottom nav
             const profileUid = document.getElementById('profile-uid');
             const profileEmail = document.getElementById('profile-email');
             const profileDisplayName = document.getElementById('profile-display-name');
 
             if (user) {
-                // User is signed in
-                authButton.textContent = 'Logout'; // Change button text
-                profileUid.textContent = user.uid; // Display user ID
-                profileEmail.textContent = user.email || 'N/A'; // Display user email
-                profileDisplayName.textContent = user.displayName || user.email.split('@')[0]; // Display user name or part of email
+                authButtonDesktop.textContent = 'Logout';
+                bottomNavAuthText.textContent = 'Logout'; // Update bottom nav text
+                profileUid.textContent = user.uid;
+                profileEmail.textContent = user.email || 'N/A';
+                profileDisplayName.textContent = user.displayName || user.email.split('@')[0];
                 console.log("User logged in:", user.uid);
             } else {
-                // User is signed out
-                authButton.textContent = 'Login'; // Change button text
-                profileUid.textContent = 'Not logged in'; // Clear profile info
+                authButtonDesktop.textContent = 'Login';
+                bottomNavAuthText.textContent = 'Login'; // Update bottom nav text
+                profileUid.textContent = 'Not logged in';
                 profileEmail.textContent = 'Not logged in';
                 profileDisplayName.textContent = 'N/A';
                 console.log("User logged out");
