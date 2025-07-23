@@ -41,6 +41,8 @@
             <nav class="hidden md:block">
                 <ul class="flex space-x-6 text-center">
                     <li><a href="#" id="home-link-desktop" data-section="home-section" class="block py-2 px-4 hover:text-purple-200 transition duration-300 rounded-md hover:bg-white hover:bg-opacity-10">Home</a></li>
+                    <li><a href="#" id="vision-mission-link-desktop" data-section="vision-mission-section" class="block py-2 px-4 hover:text-purple-200 transition duration-300 rounded-md hover:bg-white hover:bg-opacity-10">Vision & Mission</a></li>
+                    <li><a href="#" id="about-link-desktop" data-section="about-section" class="block py-2 px-4 hover:text-purple-200 transition duration-300 rounded-md hover:bg-white hover:bg-opacity-10">About Us</a></li>
                     <li><a href="#" id="play-link-desktop" data-section="play-section" class="block py-2 px-4 hover:text-purple-200 transition duration-300 rounded-md hover:bg-white hover:bg-opacity-10">Play</a></li>
                     <li><a href="#" id="profile-link-desktop" data-section="profile-section" class="block py-2 px-4 hover:text-purple-200 transition duration-300 rounded-md hover:bg-white hover:bg-opacity-10">Profile</a></li>
                     <li><button id="auth-button-desktop" class="w-full sm:w-auto bg-white text-purple-700 px-6 py-2 rounded-full shadow-lg hover:bg-purple-100 transition duration-300 font-semibold transform hover:scale-105">Login</button></li>
@@ -64,21 +66,36 @@
     </section>
 
     <!-- New: Vision and Mission Section - Full Width -->
-    <section id="vision-mission-section" class="page-section w-full mt-8">
+    <!-- Removed 'page-section' and added 'py-16' and flex centering for tighter spacing mostly vertical space -->
+    <section id="vision-mission-section" class="w-full mt-8 flex flex-col items-center justify-center py-4">
         <div class="flex flex-col md:flex-row w-full shadow-2xl overflow-hidden rounded-lg container mx-auto">
-            <!-- Mission Square (White) -->
-            <div class="w-full md:w-1/2 bg-white p-8 flex flex-col justify-center items-center text-center">
-                <h3 class="text-3xl font-bold text-gray-900 mb-4">Our Mission</h3>
-                <p class="text-lg text-gray-700 leading-relaxed">
-                    Nalanda Chess Academy is dedicated to fostering a love for chess and nurturing talent from beginners to advanced players. Our mission is to provide an engaging and accessible platform for everyone to learn, play, and grow in the world of chess.
-                </p>
-            </div>
             <!-- Vision Square (Black) -->
             <div class="w-full md:w-1/2 bg-gray-900 p-8 flex flex-col justify-center items-center text-center">
                 <h3 class="text-3xl font-bold text-white mb-4">Our Vision</h3>
                 <p class="text-lg text-gray-200 leading-relaxed">
                     To be the world's most vibrant and inclusive digital hub where chess enthusiasts of all levels converge to **discover their full potential**, **connect with a global community**, and **inspire a new generation of strategic thinkers** through the timeless game of chess.
                 </p>
+            </div>
+			<!-- Mission Square (White) -->
+            <div class="w-full md:w-1/2 bg-white p-8 flex flex-col justify-center items-center text-center">
+                <h3 class="text-3xl font-bold text-gray-900 mb-4">Our Mission</h3>
+                <p class="text-lg text-gray-700 leading-relaxed">
+                    Nalanda Chess Academy is dedicated to fostering a love for chess and nurturing talent from beginners to advanced players. Our mission is to provide an engaging and accessible platform for everyone to learn, play, and grow in the world of chess.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- New: About Nalanda Chess Academy Section - Full Width, Tight Spacing -->
+    <section id="about-section" class="w-full mt-8 flex flex-col items-center justify-center py-4">
+		<h2 class="text-3xl font-bold text-gray-800 mb-0 text-center">About Us</h2>
+        <div class="flex flex-col md:flex-row items-center md:space-x-8 w-full shadow-2xl overflow-hidden rounded-lg container mx-auto bg-white p-3">
+            <div class="md:w-1/2">
+                <img src="https://firebasestorage.googleapis.com/v0/b/nalandachessacademy-474db.firebasestorage.app/o/App_assets%2FHeaderPic.jpg?alt=media&token=7b7464bd-9c50-43da-9907-054a5e45c659" alt="Nalanda Chess Academy" class="rounded-lg shadow-md w-full h-auto">
+            </div>
+            <div class="md:w-1/2 text-lg text-gray-700 leading-relaxed mt-6 md:mt-0">                
+                <p class="mb-4">Nalanda Chess Academy is dedicated to fostering a love for chess and nurturing talent from beginners to advanced players. We provide a supportive environment for players to develop their skills, engage in friendly competition, and connect with a passionate community.</p>
+                <p>Our commitment is to make chess accessible and enjoyable for everyone, promoting strategic thinking and personal growth through this timeless game.</p>
             </div>
         </div>
     </section>
@@ -120,20 +137,6 @@
                     <i class="fas fa-users text-red-600 text-4xl mb-4"></i>
                     <h3 class="text-xl font-semibold mb-2 text-gray-800">Vibrant Community</h3>
                     <p class="text-gray-600">Connect with other chess enthusiasts, join clubs, and participate in discussions.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- 4. About Nalanda Chess Academy / Our Mission Section (Now separate from Vision/Mission) -->
-        <section id="about-section" class="page-section hidden bg-white p-8 rounded-lg shadow-2xl max-w-2xl w-full mt-8 container mx-auto">
-            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">About Our Academy</h2>
-            <div class="flex flex-col md:flex-row items-center md:space-x-8">
-                <div class="md:w-1/2 text-lg text-gray-700 leading-relaxed mb-6 md:mb-0">
-                    <p class="mb-4">Nalanda Chess Academy is dedicated to fostering a love for chess and nurturing talent from beginners to advanced players. We provide a supportive environment for players to develop their skills, engage in friendly competition, and connect with a passionate community.</p>
-                    <p>Our commitment is to make chess accessible and enjoyable for everyone, promoting strategic thinking and personal growth through this timeless game.</p>
-                </div>
-                <div class="md:w-1/2">
-                    <img src="https://placehold.co/300x200/6B46C1/FFFFFF?text=Academy+Image" alt="Nalanda Chess Academy" class="rounded-lg shadow-md w-full h-auto">
                 </div>
             </div>
         </section>
@@ -277,6 +280,13 @@
                 <a href="#" data-section="home-section" class="bottom-nav-item flex flex-col items-center text-xs p-2 rounded-md hover:bg-gray-700">
                     <i class="fas fa-home text-xl mb-1"></i>
                     <span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a href="#" data-section="about-section" class="bottom-nav-item flex flex-col items-center text-xs p-2 rounded-md hover:bg-gray-700">
+                    <i class="fas fa-info-circle text-xl mb-1"></i>
+                    <span>About</span>
                 </a>
             </li>
             <li>
