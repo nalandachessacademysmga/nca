@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Nalanda Chess Academy</title>
+    
+    <!-- Tailwind CSS CDN for easy styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-100 font-sans antialiased flex flex-col min-h-screen">
+
+    <!-- 1. Header Section (Copied from index.html) -->
+    <header class="bg-gradient-to-r from-purple-700 to-indigo-800 text-white p-4 shadow-xl">
+        <div class="container mx-auto flex justify-between items-center">
+            <!-- Logo and Site Title -->
+            <div class="flex items-center">
+                <img src="https://firebasestorage.googleapis.com/v0/b/nalandachessacademy-474db.firebasestorage.app/o/App_assets%2Flogo.png?alt=media&token=023369a4-c43f-4278-8106-f21bcf2a350d" alt="Nalanda Chess Academy Logo" class="h-10 w-auto mr-3 rounded-md shadow-lg">                
+                <h1 class="text-3xl font-extrabold rounded-md p-2 bg-white bg-opacity-20">Nalanda Chess Academy</h1>
+            </div>
+            <!-- Desktop Navigation (visible on medium screens and up, hidden on small screens) -->
+            <nav class="hidden md:block">
+                <ul class="flex space-x-6 text-center">
+                    <!-- Links adjusted to point to index.html for other sections -->
+                    <li><a href="index.html#home-section" class="block py-2 px-4 hover:text-purple-200 transition duration-300 rounded-md hover:bg-white hover:bg-opacity-10">Home</a></li>
+                    <li><a href="index.html#vision-mission-section" class="block py-2 px-4 hover:text-purple-200 transition duration-300 rounded-md hover:bg-white hover:bg-opacity-10">Vision & Mission</a></li>
+                    <li><a href="about-us.html" class="block py-2 px-4 hover:text-purple-200 transition duration-300 rounded-md hover:bg-white hover:bg-opacity-10">About Us</a></li>
+                    <!-- Contact Us link points to itself and is active -->
+                    <li><a href="contact_us.html" class="block py-2 px-4 bg-white bg-opacity-10 text-purple-200 transition duration-300 rounded-md">Contact Us</a></li>
+                    <li><a href="index.html#play-section" class="block py-2 px-4 hover:text-purple-200 transition duration-300 rounded-md hover:bg-white hover:bg-opacity-10">Play</a></li>
+                    <li><a href="index.html#profile-section" class="block py-2 px-4 hover:text-purple-200 transition duration-300 rounded-md hover:bg-white hover:bg-opacity-10">Profile</a></li>
+                    <!-- Auth button remains as a direct link, will not trigger modal on this page -->
+                    <li><a href="index.html#auth-modal" class="w-full sm:w-auto bg-white text-purple-700 px-6 py-2 rounded-full shadow-lg hover:bg-purple-100 transition duration-300 font-semibold transform hover:scale-105">Login</a></li>
+                </ul>
+            </nav>
+            <div class="md:hidden"></div> 
+        </div>
+    </header>
+
+    <!-- Main Content Area for Contact Us Page -->
+    <main class="p-4 sm:p-8 flex-grow flex flex-col items-center justify-center pb-20 md:pb-8">
+        <!-- Contact Us Section - Full Width, Tight Spacing -->
+        <section id="contact-section" class="w-full mt-8 flex flex-col items-center justify-center py-4">
+            <div class="flex flex-col md:flex-row items-center md:space-x-8 w-full shadow-2xl overflow-hidden rounded-lg container mx-auto bg-white p-8">
+                <div class="md:w-1/2 text-lg text-gray-700 leading-relaxed mb-6 md:mb-0">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Contact Us</h2>
+                    <p class="mb-4">We'd love to hear from you! Whether you have questions about our academy, need support, or just want to say hello, feel free to reach out.</p>
+                    <div class="space-y-3">
+                        <p class="flex items-center"><i class="fas fa-phone-alt text-purple-600 mr-3"></i> <strong>Phone: </strong> +91 98444 36276</p>
+                        <p class="flex items-center"><i class="fas fa-envelope text-purple-600 mr-3"></i> <strong>Email: </strong>   nalandachessacademysmga@gmail.com
+</p>
+                        <p class="flex items-center"><i class="fas fa-map-marker-alt text-purple-600 mr-3"></i> <strong>Address: </strong> Vinobha Nagar, Shivamogga, Karnataka - 577201, INDIA</p>
+                    </div>
+                </div>
+                <div class="md:w-1/2 w-full">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4 text-center md:text-left">Send Us a Message</h3>
+                    <form class="space-y-4">
+                        <div>
+                            <label for="contact-name" class="block text-gray-700 text-sm font-bold mb-2">Your Name:</label>
+                            <input type="text" id="contact-name" class="shadow-sm appearance-none border border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent" placeholder="Enter your name">
+                        </div>
+                        <div>
+                            <label for="contact-email" class="block text-gray-700 text-sm font-bold mb-2">Your Email:</label>
+                            <input type="email" id="contact-email" class="shadow-sm appearance-none border border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent" placeholder="Enter your email">
+                        </div>
+                        <div>
+                            <label for="contact-message" class="block text-gray-700 text-sm font-bold mb-2">Message:</label>
+                            <textarea id="contact-message" rows="5" class="shadow-sm appearance-none border border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent" placeholder="Your message..."></textarea>
+                        </div>
+                        <button type="submit" class="bg-purple-600 text-white px-6 py-3 rounded-full shadow-lg hover:bg-purple-700 transition duration-300 font-semibold transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-purple-300 w-full">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 8. Footer Section (Copied from index.html) -->
+    <footer class="bg-gray-900 text-gray-300 p-4 text-center mt-auto rounded-t-lg shadow-inner">
+        <p>&copy; 2025 Nalanda Chess Academy. All rights reserved.</p>
+    </footer>
+
+    <!-- Bottom Navigation Bar (Copied from index.html) -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-gray-800 text-white p-2 shadow-lg z-40 md:hidden">
+        <ul class="flex justify-around items-center h-full">
+            <!-- Links adjusted to point to index.html for other sections -->
+            <li>
+                <a href="index.html#home-section" class="bottom-nav-item flex flex-col items-center text-xs p-2 rounded-md hover:bg-gray-700">
+                    <i class="fas fa-home text-xl mb-1"></i>
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="index.html#vision-mission-section" class="bottom-nav-item flex flex-col items-center text-xs p-2 rounded-md hover:bg-gray-700">
+                    <i class="fas fa-lightbulb text-xl mb-1"></i>
+                    <span>Vision</span>
+                </a>
+            </li>
+            <li>
+                <a href="about-us.html" class="bottom-nav-item flex flex-col items-center text-xs p-2 rounded-md hover:bg-gray-700">
+                    <i class="fas fa-info-circle text-xl mb-1"></i>
+                    <span>About</span>
+                </a>
+            </li>
+            <!-- Contact Us link points to itself and is active -->
+            <li>
+                <a href="contact_us.html" class="bottom-nav-item flex flex-col items-center text-xs p-2 rounded-md bg-gray-700 active">
+                    <i class="fas fa-envelope text-xl mb-1"></i>
+                    <span>Contact</span>
+                </a>
+            </li>
+            <li>
+                <a href="index.html#play-section" class="bottom-nav-item flex flex-col items-center text-xs p-2 rounded-md hover:bg-gray-700">
+                    <i class="fas fa-chess-board text-xl mb-1"></i>
+                    <span>Play</span>
+                </a>
+            </li>
+            <li>
+                <a href="index.html#profile-section" class="bottom-nav-item flex flex-col items-center text-xs p-2 rounded-md hover:bg-gray-700">
+                    <i class="fas fa-user text-xl mb-1"></i>
+                    <span>Profile</span>
+                </a>
+            </li>
+            <li>
+                <a href="index.html#auth-modal" class="bottom-nav-item flex flex-col items-center text-xs p-2 rounded-md hover:bg-gray-700">
+                    <i class="fas fa-sign-in-alt text-xl mb-1"></i>
+                    <span>Login</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Minimal script for contact_us.html - primarily for navigation active states -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const desktopLinks = document.querySelectorAll('header nav ul li a');
+            const bottomNavLinks = document.querySelectorAll('nav.fixed.bottom-0 ul li a');
+
+            // Set active state for "Contact Us" on this page
+            desktopLinks.forEach(link => {
+                if (link.getAttribute('href') === 'contact_us.html') {
+                    link.classList.add('bg-white', 'bg-opacity-10');
+                } else {
+                    link.classList.remove('bg-white', 'bg-opacity-10');
+                }
+            });
+
+            bottomNavLinks.forEach(link => {
+                if (link.getAttribute('href') === 'contact_us.html') {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

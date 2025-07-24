@@ -6,11 +6,37 @@
 // Get references to various HTML elements by their IDs.
 // These elements will be manipulated by JavaScript to update the UI.
 const homeSection = document.getElementById('home-section');
+const visionMissionSection = document.getElementById('vision-mission-section');
+const aboutSection = document.getElementById('about-section');
+// Removed contactSection as it's now an external page
+const contactSection = document.getElementById('contact-section'); 
+const featuresSection = document.getElementById('features-section');
+const testimonialsSection = document.getElementById('testimonials-section');
+const secondaryCtaSection = document.getElementById('secondary-cta-section');
+const newsEventsSection = document.getElementById('news-events-section');
 const playSection = document.getElementById('play-section');
 const profileSection = document.getElementById('profile-section');
 
+// Array of all main content sections (excluding modals)
+const allContentSections = [
+    homeSection,
+    visionMissionSection,
+    aboutSection,
+    contactSection, 
+    contactSection, 
+    featuresSection,
+    testimonialsSection,
+    secondaryCtaSection,
+    newsEventsSection,
+    playSection,
+    profileSection
+];
+
 // Desktop Navigation Links and Button
 const homeLinkDesktop = document.getElementById('home-link-desktop');
+const visionMissionLinkDesktop = document.getElementById('vision-mission-link-desktop');
+const aboutLinkDesktop = document.getElementById('about-link-desktop');
+const contactLinkDesktop = document.getElementById('contact-link-desktop'); 
 const playLinkDesktop = document.getElementById('play-link-desktop');
 const profileLinkDesktop = document.getElementById('profile-link-desktop');
 const authButtonDesktop = document.getElementById('auth-button-desktop'); // Desktop Login/Logout button
@@ -154,7 +180,7 @@ function showSection(target) {
     }
 
     // Hide all main content sections
-    [homeSection, playSection, profileSection].forEach(section => {
+    allContentSections.forEach(section => { // Use the new allContentSections array
         section.classList.add('hidden');
     });
 
@@ -164,7 +190,8 @@ function showSection(target) {
     }
 
     // Update active class on desktop navigation links
-    [homeLinkDesktop, playLinkDesktop, profileLinkDesktop].forEach(link => {
+    // aboutLinkDesktop and contactLinkDesktop are now external links, so they are not handled here
+    [homeLinkDesktop, visionMissionLinkDesktop, aboutLinkDesktop, playLinkDesktop, profileLinkDesktop].forEach(link => {
         if (link.dataset.section === sectionToShow.id) {
             link.classList.add('bg-white', 'bg-opacity-10');
         } else {
@@ -174,7 +201,12 @@ function showSection(target) {
 
     // Update active class on bottom navigation items
     bottomNavItems.forEach(item => {
-        if (item.dataset.section === sectionToShow.id) {
+        // For external links, we don't use data-section for internal switching
+        // We only set active class if the current page *is* that external page.
+        // This script runs on index.html, so external links should not be marked active by it.
+        if (item.getAttribute('href') && item.getAttribute('href').endsWith('.html')) {
+            item.classList.remove('active'); // Ensure it's not active on index.html
+        } else if (item.dataset.section === sectionToShow.id) {
             item.classList.add('active');
         } else {
             item.classList.remove('active');
@@ -429,6 +461,14 @@ homeLinkDesktop.addEventListener('click', (e) => {
     showSection('home-section');
 });
 
+visionMissionLinkDesktop.addEventListener('click', (e) => {
+    e.preventDefault();
+    showSection('vision-mission-section');
+});
+
+// aboutLinkDesktop and contactLinkDesktop are now external links, so they don't use showSection
+// They navigate directly via their href attribute
+
 playLinkDesktop.addEventListener('click', (e) => {
     e.preventDefault();
     if (currentUser) {
@@ -454,6 +494,11 @@ profileLinkDesktop.addEventListener('click', (e) => {
 // Bottom Navigation Items
 bottomNavItems.forEach(item => {
     item.addEventListener('click', (e) => {
+        // For external links, allow default navigation behavior
+        if (item.getAttribute('href') && item.getAttribute('href').endsWith('.html')) {
+            return; // Let the browser handle the navigation
+        }
+
         e.preventDefault();
         const sectionId = item.dataset.section; // Get the target section ID from data-section attribute
         
