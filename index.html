@@ -355,8 +355,22 @@
     <!-- Your main application script -->
     <!-- This script contains the core logic for the website's functionality. -->
     <script src="script.js"></script>
-	
 	// Firestore Security Rules to prevent unauthorized users from reading or writing to game data
 	// Rules Section TBD
+    
+	<!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('Service Worker registered with scope:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.error('Service Worker registration failed:', error);
+                    });
+            });
+        }
+    </script>
 </body>
 </html>
