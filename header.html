@@ -1,0 +1,67 @@
+<!-- This file contains the common header section for Nalanda Chess Academy. -->
+<!-- It includes the logo, site title, and both desktop and mobile navigation. -->
+<!-- This content will be dynamically loaded into other HTML pages to avoid code duplication. -->
+
+<header class="bg-gradient-to-r from-purple-700 to-indigo-800 text-white p-4 shadow-xl">
+    <div class="container mx-auto flex justify-between items-center">
+        <!-- Logo and Site Title -->
+        <div class="flex items-center">
+            <img src="https://firebasestorage.googleapis.com/v0/b/nalandachessacademy-474db.firebasestorage.app/o/App_assets%2Flogo.png?alt=media&token=023369a4-c43f-4278-8106-f21bcf2a350d" alt="Nalanda Chess Academy Logo" class="h-10 w-auto mr-3 rounded-md shadow-lg">                
+            <h1 class="text-3xl font-extrabold rounded-md p-2 bg-white bg-opacity-20">Nalanda Chess Academy</h1>
+        </div>
+        <!-- Desktop Navigation (visible on medium screens and up, hidden on small screens) -->
+        <nav class="hidden md:block">
+            <ul class="flex space-x-6 text-center">
+                <li><a href="index.html" id="home-link-desktop" data-section="home-section" class="block py-2 px-4 hover:text-purple-200 transition duration-300 rounded-md hover:bg-white hover:bg-opacity-10">Home</a></li>
+                <li><a href="index.html#vision-mission-section" id="vision-mission-link-desktop" data-section="vision-mission-section" class="block py-2 px-4 hover:text-purple-200 transition duration-300 rounded-md hover:bg-white hover:bg-opacity-10">Vision & Mission</a></li>                
+                <li><a href="contact_us.html" id="contact-link-desktop" class="block py-2 px-4 hover:text-purple-200 transition duration-300 rounded-md hover:bg-white hover:bg-opacity-10">Contact Us</a></li>
+                <li><a href="index.html#play-section" id="play-link-desktop" data-section="play-section" class="block py-2 px-4 hover:text-purple-200 transition duration-300 rounded-md hover:bg-white hover:bg-opacity-10">Play</a></li>
+                <li><a href="index.html#profile-section" id="profile-link-desktop" data-section="profile-section" class="block py-2 px-4 hover:text-purple-200 transition duration-300 rounded-md hover:bg-white hover:bg-opacity-10">Profile</a></li>
+                <li><button id="auth-button-desktop" class="w-full sm:w-auto bg-white text-purple-700 px-6 py-2 rounded-full shadow-lg hover:bg-purple-100 transition duration-300 font-semibold transform hover:scale-105">Login</button></li>
+            </ul>
+        </nav>
+        <div class="md:hidden"></div> 
+    </div>
+</header>
+
+<!-- Bottom Navigation Bar (visible on small screens, hidden on medium screens and up) -->
+<nav class="fixed bottom-0 left-0 right-0 bg-gray-800 text-white p-2 shadow-lg z-40 md:hidden">
+    <ul class="flex justify-around items-center h-full">
+        <li>
+            <a href="index.html" data-section="home-section" class="bottom-nav-item flex flex-col items-center text-xs p-2 rounded-md hover:bg-gray-700">
+                <i class="fas fa-home text-xl mb-1"></i>
+                <span>Home</span>
+            </a>
+        </li>
+        <li>
+            <a href="index.html#vision-mission-section" data-section="vision-mission-section" class="bottom-nav-item flex flex-col items-center text-xs p-2 rounded-md hover:bg-gray-700">
+                <i class="fas fa-lightbulb text-xl mb-1"></i>
+                <span>Vision</span>
+            </a>
+        </li>        
+        <li>
+            <a href="contact_us.html" class="bottom-nav-item flex flex-col items-center text-xs p-2 rounded-md hover:bg-gray-700">
+                <i class="fas fa-envelope text-xl mb-1"></i>
+                <span>Contact</span>
+            </a>
+        </li>
+        <li>
+            <a href="index.html#play-section" data-section="play-section" class="bottom-nav-item flex flex-col items-center text-xs p-2 rounded-md hover:bg-gray-700">
+                <i class="fas fa-chess-board text-xl mb-1"></i>
+                <span>Play</span>
+            </a>
+        </li>
+        <li>
+            <a href="index.html#profile-section" data-section="profile-section" class="bottom-nav-item flex flex-col items-center text-xs p-2 rounded-md hover:bg-gray-700">
+                <i class="fas fa-user text-xl mb-1"></i>
+                <span>Profile</span>
+            </a>
+        </li>
+        <li>
+            <a href="index.html#auth-modal" data-section="auth-modal" class="bottom-nav-item flex flex-col items-center text-xs p-2 rounded-md hover:bg-gray-700">
+                <i class="fas fa-sign-in-alt text-xl mb-1"></i>
+                <span id="bottom-nav-auth-text">Login</span>
+            </a>
+        </li>
+    </ul>
+</nav>
