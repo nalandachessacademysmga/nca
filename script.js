@@ -2,14 +2,57 @@
 // It handles UI interactions, Firebase authentication, Firestore data synchronization,
 // and integrates with chess.js and chessboard.js for game functionality.
 
-// --- DOM Elements ---
-// Get references to various HTML elements by their IDs.
-// These elements will be manipulated by JavaScript to update the UI.
+// --- Global Variables (accessible by initializeHeaderUI and other functions) ---
+let game = new Chess(); // Initialize a new chess.js game instance. This object manages game rules.
+let board = null; // This will hold the chessboard.js instance once initialized.
+let currentUser = null; // Stores the currently logged-in Firebase user object.
+let gameId = 'default-single-player-game'; // For simplicity, using a fixed game ID combined with the user's UID for individual game persistence.
+let gameUnsubscribe = null; // Holds the unsubscribe function for Firestore real-time updates.
+
+// --- DOM Elements (will be initialized after header loads) ---
+let homeLinkDesktop;
+let visionMissionLinkDesktop;
+let aboutLinkDesktop;
+let contactLinkDesktop;
+let playLinkDesktop;
+let profileLinkDesktop;
+let authButtonDesktop;
+
+let bottomNavItems;
+let bottomNavAuthText;
+
+let startPlayingButton;
+
+let authModal;
+let authModalContent;
+let closeAuthModalButton;
+let emailInput;
+let passwordInput;
+let loginButton;
+let registerButton;
+let googleLoginButton;
+let authMessage;
+
+let profileUid;
+let profileEmail;
+let profileDisplayName;
+
+let boardElement;
+let newGameButton;
+let undoMoveButton;
+let engineMoveButton;
+let gameStatusElement;
+
+let messageBox;
+let messageText;
+let closeMessageBoxButton;
+
+// Main content sections (always present in index.html)
 const homeSection = document.getElementById('home-section');
 const visionMissionSection = document.getElementById('vision-mission-section');
 const aboutSection = document.getElementById('about-section');
 // Removed contactSection as it's now an external page
-const contactSection = document.getElementById('contact-section'); 
+// const contactSection = document.getElementById('contact-section'); 
 const featuresSection = document.getElementById('features-section');
 const testimonialsSection = document.getElementById('testimonials-section');
 const secondaryCtaSection = document.getElementById('secondary-cta-section');
@@ -22,8 +65,8 @@ const allContentSections = [
     homeSection,
     visionMissionSection,
     aboutSection,
-    contactSection, 
-    contactSection, 
+//  contactSection, 
+//  contactSection, 
     featuresSection,
     testimonialsSection,
     secondaryCtaSection,
@@ -32,44 +75,6 @@ const allContentSections = [
     profileSection
 ];
 
-// Desktop Navigation Links and Button
-const homeLinkDesktop = document.getElementById('home-link-desktop');
-const visionMissionLinkDesktop = document.getElementById('vision-mission-link-desktop');
-const aboutLinkDesktop = document.getElementById('about-link-desktop');
-const contactLinkDesktop = document.getElementById('contact-link-desktop'); 
-const playLinkDesktop = document.getElementById('play-link-desktop');
-const profileLinkDesktop = document.getElementById('profile-link-desktop');
-const authButtonDesktop = document.getElementById('auth-button-desktop'); // Desktop Login/Logout button
-
-// Bottom Navigation Links and Text
-const bottomNavItems = document.querySelectorAll('.bottom-nav-item'); // All bottom navigation links
-const bottomNavAuthText = document.getElementById('bottom-nav-auth-text'); // Text for Login/Logout in bottom nav
-
-const startPlayingButton = document.getElementById('start-playing-button'); // Button on Home section
-
-const authModal = document.getElementById('auth-modal'); // The login/register modal
-const authModalContent = document.getElementById('auth-modal-content'); // Content inside the modal for animation
-const closeAuthModalButton = document.getElementById('close-auth-modal'); // Button to close the modal
-const emailInput = document.getElementById('email'); // Email input field in modal
-const passwordInput = document.getElementById('password'); // Password input field in modal
-const loginButton = document.getElementById('login-button'); // Login button in modal
-const registerButton = document.getElementById('register-button'); // Register button in modal
-const googleLoginButton = document.getElementById('google-login-button'); // Google login button in modal
-const authMessage = document.getElementById('auth-message'); // Message display area in modal
-
-const profileUid = document.getElementById('profile-uid'); // User ID display in profile section
-const profileEmail = document.getElementById('profile-email'); // User email display in profile section
-const profileDisplayName = document.getElementById('profile-display-name'); // User display name in profile section
-
-const boardElement = document.getElementById('board'); // The chess board container
-const newGameButton = document.getElementById('new-game-button'); // Button to start a new game
-const undoMoveButton = document.getElementById('undo-move-button'); // Button to undo the last move
-const engineMoveButton = document.getElementById('engine-move-button'); // Button for AI/Engine move (placeholder)
-const gameStatusElement = document.getElementById('game-status'); // Displays current game status (e.g., "White to move")
-
-const messageBox = document.getElementById('message-box'); // Custom notification box
-const messageText = document.getElementById('message-text'); // Text content of the notification box
-const closeMessageBoxButton = document.getElementById('close-message-box'); // Button to close the notification box
 
 // --- Firebase Instances ---
 // These Firebase instances and functions are imported in index.html (type="module" script)
@@ -96,14 +101,278 @@ const query = window.query;
 const where = window.where;
 const updateDoc = window.updateDoc;
 
-// --- Chess Game Variables ---
-let game = new Chess(); // Initialize a new chess.js game instance. This object manages game rules.
-let board = null; // This will hold the chessboard.js instance once initialized.
-let currentUser = null; // Stores the currently logged-in Firebase user object.
-// For simplicity, using a fixed game ID combined with the user's UID for individual game persistence.
-// For a true multiplayer system, `gameId` would be dynamically generated and shared between players.
-let gameId = 'default-single-player-game';
-let gameUnsubscribe = null; // Holds the unsubscribe function for Firestore real-time updates.
+
+/**
+ * Initializes all DOM element references and attaches event listeners.
+ * This function is called AFTER the header.html content has been loaded into the DOM.
+ */
+window.initializeHeaderUI = function() {
+    // Initialize DOM elements that are part of the dynamically loaded header
+    homeLinkDesktop = document.getElementById('home-link-desktop');
+    visionMissionLinkDesktop = document.getElementById('vision-mission-link-desktop');
+    aboutLinkDesktop = document.getElementById('about-link-desktop');
+    contactLinkDesktop = document.getElementById('contact-link-desktop');
+    playLinkDesktop = document.getElementById('play-link-desktop');
+    profileLinkDesktop = document.getElementById('profile-link-desktop');
+    authButtonDesktop = document.getElementById('auth-button-desktop');
+
+    bottomNavItems = document.querySelectorAll('.bottom-nav-item');
+    bottomNavAuthText = document.getElementById('bottom-nav-auth-text');
+
+    // Initialize other DOM elements (these are already in index.html, but good to ensure they are referenced)
+    startPlayingButton = document.getElementById('start-playing-button');
+
+    authModal = document.getElementById('auth-modal');
+    authModalContent = document.getElementById('auth-modal-content');
+    closeAuthModalButton = document.getElementById('close-auth-modal');
+    emailInput = document.getElementById('email');
+    passwordInput = document.getElementById('password');
+    loginButton = document.getElementById('login-button');
+    registerButton = document.getElementById('register-button');
+    googleLoginButton = document.getElementById('google-login-button');
+    authMessage = document.getElementById('auth-message');
+
+    profileUid = document.getElementById('profile-uid');
+    profileEmail = document.getElementById('profile-email');
+    profileDisplayName = document.getElementById('profile-display-name');
+
+    boardElement = document.getElementById('board');
+    newGameButton = document.getElementById('new-game-button');
+    undoMoveButton = document.getElementById('undo-move-button');
+    engineMoveButton = document.getElementById('engine-move-button');
+    gameStatusElement = document.getElementById('game-status');
+
+    messageBox = document.getElementById('message-box');
+    messageText = document.getElementById('message-text');
+    closeMessageBoxButton = document.getElementById('close-message-box');
+
+    // --- Attach Event Listeners ---
+
+    // Desktop Navigation Links
+    homeLinkDesktop.addEventListener('click', (e) => {
+        e.preventDefault();
+        showSection('home-section');
+    });
+
+    visionMissionLinkDesktop.addEventListener('click', (e) => {
+        e.preventDefault();
+        showSection('vision-mission-section');
+    });
+
+    // aboutLinkDesktop and contactLinkDesktop are external links, so they navigate directly
+    // No need for event listeners here to call showSection for them.
+
+    playLinkDesktop.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (currentUser) {
+            showSection('play-section');
+        } else {
+            showMessageBox('Please log in to play chess.', 'error');
+            showSection('auth-modal');
+        }
+    });
+
+    profileLinkDesktop.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (currentUser) {
+            showSection('profile-section');
+        } else {
+            showMessageBox('Please log in to view your profile.', 'error');
+            showSection('auth-modal');
+        }
+    });
+
+    // Bottom Navigation Items
+    bottomNavItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+            // For external links, allow default navigation behavior
+            if (item.getAttribute('href') && item.getAttribute('href').endsWith('.html')) {
+                return; // Let the browser handle the navigation
+            }
+
+            e.preventDefault();
+            const sectionId = item.dataset.section;
+            
+            if (sectionId === 'auth-modal') {
+                if (currentUser) {
+                    signOut(auth).then(() => {
+                        console.log("User signed out successfully.");
+                        showMessageBox("Logged out successfully!", 'success');
+                        currentUser = null;
+                        showSection('home-section');
+                    }).catch((error) => {
+                        console.error("Error signing out:", error);
+                        showMessageBox("Error logging out: " + error.message, 'error');
+                    });
+                } else {
+                    showSection('auth-modal');
+                }
+            } else if (sectionId === 'play-section' && !currentUser) {
+                showMessageBox('Please log in to play chess.', 'error');
+                showSection('auth-modal');
+            } else if (sectionId === 'profile-section' && !currentUser) {
+                showMessageBox('Please log in to view your profile.', 'error');
+                showSection('auth-modal');
+            } else {
+                showSection(sectionId);
+            }
+        });
+    });
+
+    // "Start Playing" button on the Home section
+    startPlayingButton.addEventListener('click', () => {
+        if (currentUser) {
+            showSection('play-section');
+        } else {
+            showMessageBox('Please log in to play chess.', 'error');
+            showSection('auth-modal');
+        }
+    });
+
+    // Desktop Auth Button (Login/Logout)
+    authButtonDesktop.addEventListener('click', () => {
+        if (currentUser) {
+            signOut(auth).then(() => {
+                console.log("User signed out successfully.");
+                showMessageBox("Logged out successfully!", 'success');
+                currentUser = null;
+                showSection('home-section');
+            }).catch((error) => {
+                console.error("Error signing out:", error);
+                showMessageBox("Error logging out: " + error.message, 'error');
+            });
+        } else {
+            showSection('auth-modal');
+        }
+    });
+
+    // Close Auth Modal
+    closeAuthModalButton.addEventListener('click', () => {
+        authModal.classList.add('hidden');
+        authModalContent.classList.remove('scale-100');
+        authModalContent.classList.add('scale-95');
+        authMessage.textContent = '';
+    });
+
+    // Email/Password Login
+    loginButton.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const email = emailInput.value;
+        const password = passwordInput.value;
+
+        if (!email || !password) {
+            showAuthMessage("Please enter both email and password.");
+            return;
+        }
+
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            console.log("User logged in:", userCredential.user);
+            showMessageBox("Logged in successfully!", 'success');
+            authModal.classList.add('hidden');
+        } catch (error) {
+            console.error("Login error:", error);
+            showAuthMessage("Login failed: " + error.message, true);
+        }
+    });
+
+    // Email/Password Register
+    registerButton.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const email = emailInput.value;
+        const password = passwordInput.value;
+
+        if (!email || !password) {
+            showAuthMessage("Please enter both email and password.");
+            return;
+        }
+        if (password.length < 6) {
+            showAuthMessage("Password should be at least 6 characters.");
+            return;
+        }
+
+        try {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            console.log("User registered:", userCredential.user);
+            showMessageBox("Registered and logged in successfully!", 'success');
+            authModal.classList.add('hidden');
+        } catch (error) {
+            console.error("Registration error:", error);
+            showAuthMessage("Registration failed: " + error.message, true);
+        }
+    });
+
+    // Google Login
+    googleLoginButton.addEventListener('click', async () => {
+        const provider = new GoogleAuthProvider();
+        try {
+            const result = await signInWithPopup(auth, provider);
+            console.log("Google user logged in:", result.user);
+            showMessageBox("Logged in with Google successfully!", 'success');
+            authModal.classList.add('hidden');
+        } catch (error) {
+            console.error("Google login error:", error);
+            showAuthMessage("Google login failed: " + error.message, true);
+        }
+    });
+
+    // New Game, Undo, and Engine Move Buttons
+    newGameButton.addEventListener('click', startNewGame);
+    undoMoveButton.addEventListener('click', undoLastMove);
+    engineMoveButton.addEventListener('click', makeEngineMove);
+
+    // Close custom message box
+    closeMessageBoxButton.addEventListener('click', hideMessageBox);
+
+    // Initial authentication state check and UI update (now that elements are guaranteed to exist)
+    onAuthStateChanged(auth, (user) => {
+        currentUser = user; // Update global user variable
+        
+        // Update desktop auth button text
+        if (authButtonDesktop) authButtonDesktop.textContent = user ? 'Logout' : 'Login';
+        // Update bottom nav auth text
+        if (bottomNavAuthText) bottomNavAuthText.textContent = user ? 'Logout' : 'Login';
+
+        // Update profile info
+        if (profileUid) profileUid.textContent = user ? user.uid : 'Not logged in';
+        if (profileEmail) profileEmail.textContent = user ? (user.email || 'N/A') : 'Not logged in';
+        if (profileDisplayName) profileDisplayName.textContent = user ? (user.displayName || user.email.split('@')[0]) : 'N/A';
+
+        console.log("Auth state changed: User is", user ? "logged in" : "logged out", user ? user.uid : "");
+
+        // If user logs in and is currently on the Play section, ensure board is initialized and listening
+        // or if they are on the auth modal and just logged in, redirect them to home
+        if (user && authModal && authModal.classList.contains('hidden')) { // If logged in and modal is not active
+            // If current section is play, ensure game is loaded
+            if (playSection && !playSection.classList.contains('hidden')) {
+                initBoard();
+                listenForGameUpdates();
+            }
+        } else if (user && authModal && !authModal.classList.contains('hidden')) { // If logged in and modal IS active
+            // User just logged in via modal, redirect to home
+            showSection('home-section');
+        }
+        else if (!user && authModal && !authModal.classList.contains('hidden')) {
+            // User logged out via modal, ensure content is home
+            showSection('home-section');
+        }
+        else if (!user && homeSection && !homeSection.classList.contains('hidden')) {
+            // If logged out and on home, do nothing
+        }
+        else if (!user) { // If logged out and not on home or modal
+            showSection('home-section'); // Redirect to home
+        }
+    });
+
+    // Initial display of the home section and set active state for its bottom nav item
+    // This should only run on index.html
+    const currentPathname = window.location.pathname;
+    if (currentPathname.endsWith('/') || currentPathname.endsWith('index.html')) {
+        showSection('home-section');
+    }
+    // For other pages (about-us.html, contact_us.html), their own inline scripts will handle active states.
+};
+
 
 // --- Helper Functions ---
 
@@ -114,6 +383,8 @@ let gameUnsubscribe = null; // Holds the unsubscribe function for Firestore real
  * Determines the background color of the message box.
  */
 function showMessageBox(message, type = 'info') {
+    if (!messageBox || !messageText) return; // Ensure elements exist
+
     messageText.textContent = message; // Set the message text
     // Remove previous type-specific background classes
     messageBox.classList.remove('bg-green-600', 'bg-red-600', 'bg-blue-600');
@@ -139,6 +410,7 @@ function showMessageBox(message, type = 'info') {
  * Hides the custom message box with an animation.
  */
 function hideMessageBox() {
+    if (!messageBox) return; // Ensure element exists
     // Animate the message box out by sliding down and fading out
     messageBox.classList.remove('translate-y-0', 'opacity-100');
     messageBox.classList.add('translate-y-full', 'opacity-0');
@@ -152,12 +424,14 @@ function hideMessageBox() {
  * @param {boolean} isError - If true, style as an error message (red text); otherwise, green text.
  */
 function showAuthMessage(message, isError = true) {
+    if (!authMessage) return; // Ensure element exists
     authMessage.textContent = message;
     authMessage.className = `text-center text-sm mt-4 ${isError ? 'text-red-500' : 'text-green-500'}`;
 }
 
 /**
  * Switches the active content section and updates active navigation items.
+ * This function is designed for internal page sections on index.html.
  * @param {HTMLElement | string} target - The HTML element (section) to show, or its ID string.
  */
 function showSection(target) {
@@ -170,18 +444,19 @@ function showSection(target) {
 
     // Handle special case for 'auth-modal' which is a modal, not a content section
     if (sectionToShow && sectionToShow.id === 'auth-modal') {
-        authModal.classList.remove('hidden');
-        authModalContent.classList.remove('scale-95');
-        authModalContent.classList.add('scale-100');
-        // Do not hide other sections or mark nav items active for a modal
+        if (authModal && authModalContent) {
+            authModal.classList.remove('hidden');
+            authModalContent.classList.remove('scale-95');
+            authModalContent.classList.add('scale-100');
+        }
         return;
     } else {
-        authModal.classList.add('hidden'); // Ensure modal is hidden if navigating to a content section
+        if (authModal) authModal.classList.add('hidden'); // Ensure modal is hidden if navigating to a content section
     }
 
     // Hide all main content sections
-    allContentSections.forEach(section => { // Use the new allContentSections array
-        section.classList.add('hidden');
+    allContentSections.forEach(section => {
+        if (section) section.classList.add('hidden');
     });
 
     // Show the target content section
@@ -190,20 +465,22 @@ function showSection(target) {
     }
 
     // Update active class on desktop navigation links
-    // aboutLinkDesktop and contactLinkDesktop are now external links, so they are not handled here
-    [homeLinkDesktop, visionMissionLinkDesktop, aboutLinkDesktop, playLinkDesktop, profileLinkDesktop].forEach(link => {
-        if (link.dataset.section === sectionToShow.id) {
-            link.classList.add('bg-white', 'bg-opacity-10');
-        } else {
-            link.classList.remove('bg-white', 'bg-opacity-10');
+    // Note: aboutLinkDesktop and contactLinkDesktop are external links, so they are not managed here.
+    // Their active state is handled by the script on their respective HTML pages.
+    [homeLinkDesktop, visionMissionLinkDesktop, playLinkDesktop, profileLinkDesktop].forEach(link => {
+        if (link) { // Ensure link exists (important for dynamic content)
+            if (link.dataset.section === sectionToShow.id) {
+                link.classList.add('bg-white', 'bg-opacity-10');
+            } else {
+                link.classList.remove('bg-white', 'bg-opacity-10');
+            }
         }
     });
 
     // Update active class on bottom navigation items
     bottomNavItems.forEach(item => {
-        // For external links, we don't use data-section for internal switching
-        // We only set active class if the current page *is* that external page.
-        // This script runs on index.html, so external links should not be marked active by it.
+        // For external links (like about-us.html, contact_us.html), this script on index.html
+        // should not set their active state. Their own page's script will handle it.
         if (item.getAttribute('href') && item.getAttribute('href').endsWith('.html')) {
             item.classList.remove('active'); // Ensure it's not active on index.html
         } else if (item.dataset.section === sectionToShow.id) {
@@ -228,6 +505,8 @@ function showSection(target) {
  * Checks for game over conditions (checkmate, draw) and whose turn it is.
  */
 function updateGameStatus() {
+    if (!gameStatusElement) return; // Ensure element exists
+
     let status = '';
     let moveColor = 'White';
     if (game.turn() === 'b') { // 'b' for black, 'w' for white
@@ -321,11 +600,14 @@ function initBoard() {
         onSnapEnd: updateGameStatus // Callback after piece animation, useful for updating status
     };
     // Create the chessboard instance and attach it to the 'board' div
-    board = Chessboard('board', config);
-    updateGameStatus(); // Set initial game status
-    
-    // Add event listener to resize the board when the window is resized
-    window.addEventListener('resize', board.resize);
+    if (boardElement) { // Ensure boardElement exists
+        board = Chessboard('board', config);
+        updateGameStatus(); // Set initial game status
+        // Add event listener to resize the board when the window is resized
+        window.addEventListener('resize', board.resize);
+    } else {
+        console.error("Chessboard element not found. Cannot initialize board.");
+    }
 }
 
 /**
@@ -333,7 +615,7 @@ function initBoard() {
  */
 function startNewGame() {
     game.reset(); // Reset the chess.js game state
-    board.position('start'); // Reset the visual board to the starting position
+    if (board) board.position('start'); // Reset the visual board to the starting position
     updateGameStatus(); // Update game status display
     updateFirestoreGame(game.fen()); // Save the new initial state to Firestore
     showMessageBox('New game started!', 'success'); // Notify the user
@@ -349,7 +631,7 @@ function undoLastMove() {
     } else {
         showMessageBox('Last move undone.', 'success'); // Confirm undo
     }
-    board.position(game.fen()); // Update the visual board to the new FEN
+    if (board) board.position(game.fen()); // Update the visual board to the new FEN
     updateGameStatus(); // Update game status display
     updateFirestoreGame(game.fen()); // Save the updated state to Firestore
 }
@@ -435,7 +717,7 @@ function listenForGameUpdates() {
             // Only update the board if the FEN has actually changed (to avoid unnecessary re-renders)
             if (newFen && newFen !== game.fen()) {
                 game.load(newFen); // Load the new FEN into chess.js
-                board.position(newFen); // Update the visual board
+                if (board) board.position(newFen); // Update the visual board
                 updateGameStatus(); // Update the game status display
                 console.log("Game state updated from Firestore:", newFen);
                 showMessageBox('Game state updated!', 'info'); // Notify user of update
@@ -452,253 +734,3 @@ function listenForGameUpdates() {
     });
 }
 
-// --- Event Listeners ---
-// Attach event listeners to various UI elements to handle user interactions.
-
-// Desktop Navigation Links
-homeLinkDesktop.addEventListener('click', (e) => {
-    e.preventDefault();
-    showSection('home-section');
-});
-
-visionMissionLinkDesktop.addEventListener('click', (e) => {
-    e.preventDefault();
-    showSection('vision-mission-section');
-});
-
-// aboutLinkDesktop and contactLinkDesktop are now external links, so they don't use showSection
-// They navigate directly via their href attribute
-
-playLinkDesktop.addEventListener('click', (e) => {
-    e.preventDefault();
-    if (currentUser) {
-        showSection('play-section'); // Show the play section if logged in
-        initBoard(); // Initialize the board if it hasn't been already
-        listenForGameUpdates(); // Start listening for game updates
-    } else {
-        showMessageBox('Please log in to play chess.', 'error');
-        showSection('auth-modal'); // Show auth modal
-    }
-});
-
-profileLinkDesktop.addEventListener('click', (e) => {
-    e.preventDefault();
-    if (currentUser) {
-        showSection('profile-section'); // Show the profile section if logged in
-    } else {
-        showMessageBox('Please log in to view your profile.', 'error');
-        showSection('auth-modal'); // Show auth modal
-    }
-});
-
-// Bottom Navigation Items
-bottomNavItems.forEach(item => {
-    item.addEventListener('click', (e) => {
-        // For external links, allow default navigation behavior
-        if (item.getAttribute('href') && item.getAttribute('href').endsWith('.html')) {
-            return; // Let the browser handle the navigation
-        }
-
-        e.preventDefault();
-        const sectionId = item.dataset.section; // Get the target section ID from data-section attribute
-        
-        // Special handling for the auth button in bottom nav
-        if (sectionId === 'auth-modal') {
-            if (currentUser) {
-                // If logged in, this button acts as logout
-                signOut(auth).then(() => {
-                    console.log("User signed out successfully.");
-                    showMessageBox("Logged out successfully!", 'success');
-                    currentUser = null;
-                    showSection('home-section'); // Go to home after logout
-                }).catch((error) => {
-                    console.error("Error signing out:", error);
-                    showMessageBox("Error logging out: " + error.message, 'error');
-                });
-            } else {
-                // If logged out, show the auth modal
-                showSection('auth-modal');
-            }
-        } else if (sectionId === 'play-section' && !currentUser) {
-            showMessageBox('Please log in to play chess.', 'error');
-            showSection('auth-modal');
-        } else if (sectionId === 'profile-section' && !currentUser) {
-            showMessageBox('Please log in to view your profile.', 'error');
-            showSection('auth-modal');
-        }
-        else {
-            showSection(sectionId);
-        }
-    });
-});
-
-
-// "Start Playing" button on the Home section
-startPlayingButton.addEventListener('click', () => {
-    if (currentUser) {
-        showSection(playSection); // Show the play section if logged in
-        initBoard(); // Initialize the board if it hasn't been already
-        listenForGameUpdates(); // Start listening for game updates
-    } else {
-        showMessageBox('Please log in to play chess.', 'error'); // Prompt login if not authenticated
-        authModal.classList.remove('hidden'); // Show the authentication modal
-    }
-});
-
-// Authentication Button (toggles between Login and Logout)
-authButton.addEventListener('click', () => {
-    if (currentUser) {
-        // If a user is currently logged in, clicking the button logs them out
-        signOut(auth).then(() => {
-            console.log("User signed out successfully.");
-            showMessageBox("Logged out successfully!", 'success'); // Success message
-            currentUser = null; // Clear the global currentUser variable
-            showSection('home-section'); // Redirect to home page after logout
-        }).catch((error) => {
-            console.error("Error signing out:", error);
-            showMessageBox("Error logging out: " + error.message, 'error'); // Error message
-        });
-    } else {
-        showSection('auth-modal');
-    }
-});
-
-// Close Authentication Modal Button
-closeAuthModalButton.addEventListener('click', () => {
-    authModal.classList.add('hidden'); // Hide the modal
-    authModalContent.classList.remove('scale-100'); // Reset scale for modal exit animation
-    authModalContent.classList.add('scale-95');
-    authMessage.textContent = ''; // Clear any previous auth messages
-});
-
-// Email/Password Login Form Submission
-loginButton.addEventListener('click', async (e) => {
-    e.preventDefault(); // Prevent default form submission (page reload)
-    const email = emailInput.value;
-    const password = passwordInput.value;
-
-    if (!email || !password) {
-        showAuthMessage("Please enter both email and password."); // Validate inputs
-        return;
-    }
-
-    try {
-        // Attempt to sign in with email and password using Firebase Auth
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        console.log("User logged in:", userCredential.user);
-        showMessageBox("Logged in successfully!", 'success'); // Success message
-        authModal.classList.add('hidden'); // Hide the modal
-        // The onAuthStateChanged listener will handle updating the UI (authButton, profile info)
-    } catch (error) {
-        console.error("Login error:", error);
-        showAuthMessage("Login failed: " + error.message, true); // Display error message
-    }
-});
-
-// Email/Password Registration Form Submission
-registerButton.addEventListener('click', async (e) => {
-    e.preventDefault(); // Prevent default form submission
-    const email = emailInput.value;
-    const password = passwordInput.value;
-
-    if (!email || !password) {
-        showAuthMessage("Please enter both email and password."); // Validate inputs
-        return;
-    }
-    if (password.length < 6) { // Firebase password minimum length
-        showAuthMessage("Password should be at least 6 characters.");
-        return;
-    }
-
-    try {
-        // Attempt to create a new user with email and password using Firebase Auth
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        console.log("User registered:", userCredential.user);
-        showMessageBox("Registered and logged in successfully!", 'success'); // Success message
-        authModal.classList.add('hidden'); // Hide the modal
-        // The onAuthStateChanged listener will handle updating the UI
-    } catch (error) {
-        console.error("Registration error:", error);
-        showAuthMessage("Registration failed: " + error.message, true); // Display error message
-    }
-});
-
-// Google Login Button
-googleLoginButton.addEventListener('click', async () => {
-    const provider = new GoogleAuthProvider(); // Create a new Google Auth Provider instance
-    try {
-        // Attempt to sign in with Google popup using Firebase Auth
-        const result = await signInWithPopup(auth, provider);
-        console.log("Google user logged in:", result.user);
-        showMessageBox("Logged in with Google successfully!", 'success'); // Success message
-        authModal.classList.add('hidden'); // Hide the modal
-        // The onAuthStateChanged listener will handle updating the UI
-    } catch (error) {
-        console.error("Google login error:", error);
-        showAuthMessage("Google login failed: " + error.message, true); // Display error message
-    }
-});
-
-// New Game, Undo, and Engine Move Buttons
-newGameButton.addEventListener('click', startNewGame);
-
-// Undo Move Button
-undoMoveButton.addEventListener('click', undoLastMove);
-
-// Engine Move Button (placeholder)
-engineMoveButton.addEventListener('click', makeEngineMove);
-
-// Close Custom Message Box Button
-closeMessageBoxButton.addEventListener('click', hideMessageBox);
-
-
-// --- Initial Setup ---
-// This block runs once when the script loads and sets up the initial state.
-
-// Listen for authentication state changes globally.
-// This is critical for updating UI elements based on login status.
-onAuthStateChanged(auth, (user) => {
-    currentUser = user; // Update global user variable
-    
-    // Update desktop auth button text
-    authButtonDesktop.textContent = user ? 'Logout' : 'Login';
-    // Update bottom nav auth text
-    bottomNavAuthText.textContent = user ? 'Logout' : 'Login';
-
-    // Update profile info
-    profileUid.textContent = user ? user.uid : 'Not logged in';
-    profileEmail.textContent = user ? (user.email || 'N/A') : 'Not logged in';
-    profileDisplayName.textContent = user ? (user.displayName || user.email.split('@')[0]) : 'N/A';
-
-    console.log("Auth state changed: User is", user ? "logged in" : "logged out", user ? user.uid : "");
-
-    // If user logs in and is currently on the Play section, ensure board is initialized and listening
-    // or if they are on the auth modal and just logged in, redirect them to home
-    if (user && authModal.classList.contains('hidden')) { // If logged in and modal is not active
-        // If current section is play, ensure game is loaded
-        if (!playSection.classList.contains('hidden')) {
-            initBoard();
-            listenForGameUpdates();
-        }
-    } else if (user && !authModal.classList.contains('hidden')) { // If logged in and modal IS active
-        // User just logged in via modal, redirect to home
-        showSection('home-section');
-    }
-    else if (!user && !authModal.classList.contains('hidden')) {
-        // User logged out via modal, ensure content is home
-        showSection('home-section');
-    }
-    else if (!user && !homeSection.classList.contains('hidden')) {
-        // If logged out and on home, do nothing
-    }
-    else if (!user) { // If logged out and not on home or modal
-        showSection('home-section'); // Redirect to home
-    }
-});
-
-// Initially display the home section when the page loads.
-showSection('home-section');
-
-// The chessboard initialization and game update listening are now tied
-// to user login and navigation to the 'Play' section, ensuring resources
-// are only loaded when needed.

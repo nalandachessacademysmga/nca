@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nalanda Chess Academy</title>
     
+    <!-- Preload critical hero image for faster display on home page -->
+    <link rel="preload" as="image" href="https://firebasestorage.googleapis.com/v0/b/nalandachessacademy-474db.firebasestorage.app/o/App_assets%2FTournament.png?alt=media&token=acc6dc17-1bbb-491e-93d7-d23c131ecfc9">
+
     <!-- Tailwind CSS CDN for easy styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -26,33 +29,8 @@
 </head>
 <body class="bg-gray-100 font-sans antialiased flex flex-col min-h-screen">
 
-    <!-- 1. Header Section -->
-    <!-- This section contains the site logo, title, and main navigation. -->
-    <!-- It uses a gradient background, padding, and shadow for visual appeal. -->
-    <header class="bg-gradient-to-r from-purple-700 to-indigo-800 text-white p-4 shadow-xl">
-        <div class="container mx-auto flex justify-between items-center">
-            <!-- Logo and Site Title -->
-            <div class="flex items-center">
-                <!-- IMPORTANT: Replace with your actual Firebase Storage logo URL -->
-                <img src="https://firebasestorage.googleapis.com/v0/b/nalandachessacademy-474db.firebasestorage.app/o/App_assets%2Flogo.png?alt=media&token=023369a4-c43f-4278-8106-f21bcf2a350d" alt="Nalanda Chess Academy Logo" class="h-10 w-auto mr-3 rounded-md shadow-lg">                
-                <h1 class="text-3xl font-extrabold rounded-md p-2 bg-white bg-opacity-20">Nalanda Chess Academy</h1>
-            </div>
-            <!-- Desktop Navigation (visible on medium screens and up, hidden on small screens) -->
-            <nav class="hidden md:block">
-                <ul class="flex space-x-6 text-center">
-                    <li><a href="#" id="home-link-desktop" data-section="home-section" class="block py-2 px-4 hover:text-purple-200 transition duration-300 rounded-md hover:bg-white hover:bg-opacity-10">Home</a></li>
-                    <li><a href="#" id="vision-mission-link-desktop" data-section="vision-mission-section" class="block py-2 px-4 hover:text-purple-200 transition duration-300 rounded-md hover:bg-white hover:bg-opacity-10">Vision & Mission</a></li>
-                    <!-- Link to external Contact Us page -->
-                    <li><a href="contact_us.html" id="contact-link-desktop" class="block py-2 px-4 hover:text-purple-200 transition duration-300 rounded-md hover:bg-white hover:bg-opacity-10">Contact Us</a></li>
-                    <li><a href="#" id="play-link-desktop" data-section="play-section" class="block py-2 px-4 hover:text-purple-200 transition duration-300 rounded-md hover:bg-white hover:bg-opacity-10">Play</a></li>
-                    <li><a href="#" id="profile-link-desktop" data-section="profile-section" class="block py-2 px-4 hover:text-purple-200 transition duration-300 rounded-md hover:bg-white hover:bg-opacity-10">Profile</a></li>
-                    <li><button id="auth-button-desktop" class="w-full sm:w-auto bg-white text-purple-700 px-6 py-2 rounded-full shadow-lg hover:bg-purple-100 transition duration-300 font-semibold transform hover:scale-105">Login</button></li>
-                </ul>
-            </nav>
-            <!-- Placeholder for mobile header if needed, otherwise just balances flex-between -->
-            <div class="md:hidden"></div> 
-        </div>
-    </header>
+    <!-- Placeholder for the dynamically loaded header -->
+    <div id="header-placeholder"></div>
 
     <!-- 2. Hero Section (Home Section) - Full Width -->
     <section id="home-section" 
@@ -92,7 +70,8 @@
 		<h2 class="text-3xl font-bold text-gray-800 mb-0 text-center">About Us</h2>
         <div class="flex flex-col md:flex-row items-center md:space-x-8 w-full shadow-2xl overflow-hidden rounded-lg container mx-auto bg-white p-3">
             <div class="md:w-1/2">
-                <img src="https://firebasestorage.googleapis.com/v0/b/nalandachessacademy-474db.firebasestorage.app/o/App_assets%2FHeaderPic.jpg?alt=media&token=7b7464bd-9c50-43da-9907-054a5e45c659" alt="Nalanda Chess Academy" class="rounded-lg shadow-md w-full h-auto">
+                <!-- Added loading="lazy" for off-screen image optimization -->
+                <img src="https://firebasestorage.googleapis.com/v0/b/nalandachessacademy-474db.firebasestorage.app/o/App_assets%2FHeaderPic.jpg?alt=media&token=7b7464bd-9c50-43da-9907-054a5e45c659" alt="Nalanda Chess Academy" class="rounded-lg shadow-md w-full h-auto" loading="lazy">
             </div>
             <div class="md:w-1/2 text-lg text-gray-700 leading-relaxed mt-6 md:mt-0">                
                 <p class="mb-4">Nalanda Chess Academy is dedicated to fostering a love for chess and nurturing talent from beginners to advanced players. We provide a supportive environment for players to develop their skills, engage in friendly competition, and connect with a passionate community.</p>
@@ -273,43 +252,30 @@
         <p>&copy; 2025 Nalanda Chess Academy. All rights reserved.</p>
     </footer>
 
-    <!-- Bottom Navigation Bar (visible on small screens, hidden on medium screens and up) -->
-    <!-- This fixed navigation bar is designed for mobile-first interaction. -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-gray-800 text-white p-2 shadow-lg z-40 md:hidden">
-        <ul class="flex justify-around items-center h-full">
-            <li>
-                <a href="#" data-section="home-section" class="bottom-nav-item flex flex-col items-center text-xs p-2 rounded-md hover:bg-gray-700">
-                    <i class="fas fa-home text-xl mb-1"></i>
-                    <span>Home</span>
-                </a>
-            </li>            
-            <!-- Link to external Contact Us page -->
-            <li>
-                <a href="contact_us.html" class="bottom-nav-item flex flex-col items-center text-xs p-2 rounded-md hover:bg-gray-700">
-                    <i class="fas fa-envelope text-xl mb-1"></i>
-                    <span>Contact</span>
-                </a>
-            </li>
-            <li>
-                <a href="#" data-section="play-section" class="bottom-nav-item flex flex-col items-center text-xs p-2 rounded-md hover:bg-gray-700">
-                    <i class="fas fa-chess-board text-xl mb-1"></i>
-                    <span>Play</span>
-                </a>
-            </li>
-            <li>
-                <a href="#" data-section="profile-section" class="bottom-nav-item flex flex-col items-center text-xs p-2 rounded-md hover:bg-gray-700">
-                    <i class="fas fa-user text-xl mb-1"></i>
-                    <span>Profile</span>
-                </a>
-            </li>
-            <li>
-                <a href="#" data-section="auth-modal" class="bottom-nav-item flex flex-col items-center text-xs p-2 rounded-md hover:bg-gray-700">
-                    <i class="fas fa-sign-in-alt text-xl mb-1"></i>
-                    <span id="bottom-nav-auth-text">Login</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
+    <!-- Script to load the header dynamically -->
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const headerPlaceholder = document.getElementById('header-placeholder');
+            if (headerPlaceholder) {
+                try {
+                    const response = await fetch('header.html');
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const headerHtml = await response.text();
+                    headerPlaceholder.innerHTML = headerHtml;
+                    // After header is loaded, initialize its UI elements and listeners
+                    if (window.initializeHeaderUI) {
+                        window.initializeHeaderUI();
+                    }
+                } catch (error) {
+                    console.error('Error loading header:', error);
+                    // Fallback: if header fails to load, you might want to display a static header or an error message.
+                    // For now, we'll just log the error.
+                }
+            }
+        });
+    </script>
 
     <!-- Firebase SDKs -->
     <!-- This script loads Firebase libraries and initializes the Firebase app. -->
