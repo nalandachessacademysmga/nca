@@ -1,0 +1,8 @@
+[
+  {
+    "origin": ["https://nalandachessacademy-474db.web.app", "http://localhost:5000"],
+    "method": ["GET"],
+    "responseHeader": ["Content-Type", "x-goog-meta-data"],
+    "maxAgeSeconds": 3600
+  }
+]
