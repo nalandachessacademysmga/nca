@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us - Nalanda Chess Academy</title>
-    
-    <!-- Tailwind CSS CDN for easy styling -->
+    <title>Nalanda Chess Academy - Contact Us</title>
+    <!-- Use Tailwind CSS for a modern, responsive design -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* Custom styles for the form validation error state */
+        .input-error {
+            border-color: #ef4444; /* red-500 */
+        }
+    </style>
 </head>
 <body class="bg-gray-100 font-sans antialiased flex flex-col min-h-screen">
 
@@ -23,32 +24,35 @@
     <main class="p-4 sm:p-8 flex-grow flex flex-col items-center justify-center pb-20 md:pb-8">
         <!-- Contact Us Section - Full Width, Tight Spacing -->
         <section id="contact-section" class="w-full mt-8 flex flex-col items-center justify-center py-4">
-            <div class="flex flex-col md:flex-row items-center md:space-x-8 w-full shadow-2xl overflow-hidden rounded-lg container mx-auto bg-white p-8">
+            <div class="flex flex-col md:flex-row items-center md:space-x-8 w-full max-w-4xl shadow-2xl overflow-hidden rounded-lg container mx-auto bg-white p-8">
                 <div class="md:w-1/2 text-lg text-gray-700 leading-relaxed mb-6 md:mb-0">
                     <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Contact Us</h2>
                     <p class="mb-4">We'd love to hear from you! Whether you have questions about our academy, need support, or just want to say hello, feel free to reach out.</p>
                     <div class="space-y-3">
                         <p class="flex items-center"><i class="fas fa-phone-alt text-purple-600 mr-3"></i> <strong>Phone: </strong> +91 98444 36276</p>
-                        <p class="flex items-center"><i class="fas fa-envelope text-purple-600 mr-3"></i> <strong>Email: </strong>   nalandachessacademysmga@gmail.com
-</p>
+                        <p class="flex items-center"><i class="fas fa-envelope text-purple-600 mr-3"></i> <strong>Email: </strong> nalandachessacademysmga@gmail.com</p>
                         <p class="flex items-center"><i class="fas fa-map-marker-alt text-purple-600 mr-3"></i> <strong>Address: </strong> Vinobha Nagar, Shivamogga, Karnataka - 577201, INDIA</p>
                     </div>
                 </div>
                 <div class="md:w-1/2 w-full">
                     <h3 class="text-2xl font-bold text-gray-800 mb-4 text-center md:text-left">Send Us a Message</h3>
-                    <form class="space-y-4">
+                    <form id="contact-form" class="space-y-4">
                         <div>
                             <label for="contact-name" class="block text-gray-700 text-sm font-bold mb-2">Your Name:</label>
                             <input type="text" id="contact-name" class="shadow-sm appearance-none border border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent" placeholder="Enter your name">
+                            <div id="name-error" class="text-red-500 text-sm mt-1"></div>
                         </div>
                         <div>
                             <label for="contact-email" class="block text-gray-700 text-sm font-bold mb-2">Your Email:</label>
                             <input type="email" id="contact-email" class="shadow-sm appearance-none border border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent" placeholder="Enter your email">
+                            <div id="email-error" class="text-red-500 text-sm mt-1"></div>
                         </div>
                         <div>
                             <label for="contact-message" class="block text-gray-700 text-sm font-bold mb-2">Message:</label>
                             <textarea id="contact-message" rows="5" class="shadow-sm appearance-none border border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent" placeholder="Your message..."></textarea>
+                            <div id="message-error" class="text-red-500 text-sm mt-1"></div>
                         </div>
+                        <div id="form-status" class="text-center font-semibold mt-4"></div>
                         <button type="submit" class="bg-purple-600 text-white px-6 py-3 rounded-full shadow-lg hover:bg-purple-700 transition duration-300 font-semibold transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-purple-300 w-full">Send Message</button>
                     </form>
                 </div>
@@ -107,6 +111,96 @@
                     });
             });
         }
+    </script>
+
+    <!-- Form Validation Script -->
+    <script>
+        // Get references to all the form elements
+        const contactForm = document.getElementById('contact-form');
+        const nameInput = document.getElementById('contact-name');
+        const emailInput = document.getElementById('contact-email');
+        const messageInput = document.getElementById('contact-message');
+        const nameError = document.getElementById('name-error');
+        const emailError = document.getElementById('email-error');
+        const messageError = document.getElementById('message-error');
+        const formStatus = document.getElementById('form-status');
+
+        // Function to clear error messages and classes from a single input
+        function clearInputError(input, errorDiv) {
+            input.classList.remove('input-error');
+            errorDiv.textContent = '';
+        }
+
+        // Function to clear all error messages and classes
+        function clearAllErrors() {
+            clearInputError(nameInput, nameError);
+            clearInputError(emailInput, emailError);
+            clearInputError(messageInput, messageError);
+            formStatus.textContent = '';
+            formStatus.classList.remove('text-green-500', 'text-red-500');
+        }
+
+        // Add input event listeners to clear errors as the user types
+        nameInput.addEventListener('input', () => clearInputError(nameInput, nameError));
+        emailInput.addEventListener('input', () => clearInputError(emailInput, emailError));
+        messageInput.addEventListener('input', () => clearInputError(messageInput, messageError));
+
+        // Add the main submit event listener to the form
+        contactForm.addEventListener('submit', (e) => {
+            // Prevent the default form submission
+            e.preventDefault();
+            clearAllErrors();
+
+            let isValid = true;
+            const name = nameInput.value.trim();
+            const email = emailInput.value.trim();
+            const message = messageInput.value.trim();
+
+            // Validate name field
+            if (name === '') {
+                nameInput.classList.add('input-error');
+                nameError.textContent = 'Please enter your name.';
+                isValid = false;
+            }
+
+            // Validate email field
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (email === '') {
+                emailInput.classList.add('input-error');
+                emailError.textContent = 'Please enter your email address.';
+                isValid = false;
+            } else if (!emailRegex.test(email)) {
+                emailInput.classList.add('input-error');
+                emailError.textContent = 'Please enter a valid email address.';
+                isValid = false;
+            }
+
+            // Validate message field
+            if (message === '') {
+                messageInput.classList.add('input-error');
+                messageError.textContent = 'Please enter a message.';
+                isValid = false;
+            }
+
+            // If the form is valid, show a success message and create a mailto link
+            if (isValid) {
+                const subject = encodeURIComponent(`Contact from ${name}`);
+                const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
+                const mailtoLink = `mailto:nalandachessacademysmga@gmail.com?subject=${subject}&body=${body}`;
+
+                formStatus.innerHTML = `
+                    <p class="text-green-500">Thank you for your message! Click the button below to open your email client and send it.</p>
+                    <a href="${mailtoLink}" class="inline-block mt-4 bg-purple-600 text-white px-6 py-3 rounded-full shadow-lg hover:bg-purple-700 transition duration-300 font-semibold transform hover:scale-105">
+                        Open Email Client
+                    </a>
+                `;
+                contactForm.reset();
+            } else {
+                // If the form is invalid, show a general error message
+                formStatus.textContent = 'Please correct the errors above.';
+                formStatus.classList.add('text-red-500');
+            }
+        });
     </script>
 </body>
 </html>
