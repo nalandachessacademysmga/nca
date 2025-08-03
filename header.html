@@ -1,10 +1,11 @@
-<!-- This file contains the common header section for Nalanda Chess Academy. -->
-<!-- It includes the logo, site title, and both desktop and mobile navigation. -->
-<!-- This content will be dynamically loaded into other HTML pages to avoid code duplication. -->
+<!-- This is the header file (header.html) which is dynamically loaded by the main page. -->
+<!-- It contains both the desktop and mobile header layouts, managed by Tailwind CSS's responsive classes. -->
+<!-- It also includes the navigation links and the authentication modal which are required by the main script. -->
 
+<!-- Desktop Header (Visible on screens >= 768px) -->
 <header class="bg-gradient-to-r from-gray-800 to-gray-900 text-white shadow-lg sticky top-0 z-50 hidden md:block">
     <div class="container mx-auto px-6 py-4 flex items-center justify-between">
-        <!-- Logo and Site Title -->
+        <!-- Logo and Site Title for Desktop -->
         <div class="flex items-center">
             <img src="https://firebasestorage.googleapis.com/v0/b/nalandachessacademy-474db.firebasestorage.app/o/App_assets%2Flogo.png?alt=media&token=023369a4-c43f-4278-8106-f21bcf2a350d" alt="Nalanda Chess Academy Logo" class="h-10 w-auto mr-3 rounded-md shadow-lg">                
             <h1 class="text-3xl font-extrabold rounded-md p-2 bg-white bg-opacity-20">Nalanda Chess Academy</h1>
@@ -24,7 +25,17 @@
     </div>
 </header>
 
-<!-- Bottom Navigation Bar (visible on small screens, hidden on medium screens and up) -->
+<!-- Mobile Header (Visible on screens < 768px) -->
+<header class="bg-gradient-to-r from-gray-800 to-gray-900 text-white shadow-lg sticky top-0 z-50 block md:hidden">
+    <div class="container relative mx-auto px-4 py-3 flex items-center justify-start">
+        <!-- Mobile Logo on the left -->
+        <img src="https://firebasestorage.googleapis.com/v0/b/nalandachessacademy-474db.firebasestorage.app/o/App_assets%2Flogo.png?alt=media&token=023369a4-c43f-4278-8106-f21bcf2a350d" alt="Nalanda Chess Academy Logo" class="h-8 w-auto rounded-md">
+        <!-- Mobile Site Title centered -->
+        <h1 class="text-xl font-bold absolute left-1/2 transform -translate-x-1/2">Nalanda Chess Academy</h1>
+    </div>
+</header>
+
+<!-- Bottom Navigation Bar (Mobile) -->
 <nav class="fixed bottom-0 left-0 right-0 bg-gray-800 text-white p-2 shadow-lg z-40 md:hidden">
     <ul class="flex justify-around items-center h-full">
         <li>
@@ -65,3 +76,41 @@
         </li>
     </ul>
 </nav>
+
+<!-- Auth Modal (Hidden by default, shown on click) -->
+<div id="auth-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[1000] hidden">
+    <div id="auth-modal-content" class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8 w-full max-w-md scale-95 transform transition-all duration-300">
+        <div class="flex justify-end">
+            <button id="close-auth-modal" class="text-gray-500 hover:text-gray-900 dark:hover:text-white">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        <div class="text-center mb-6">
+            <h3 class="text-3xl font-extrabold">Welcome!</h3>
+            <p class="text-gray-500 dark:text-gray-400 mt-2">Login or Register to start playing.</p>
+        </div>
+        <form class="space-y-4">
+            <div>
+                <label for="email" class="sr-only">Email</label>
+                <input type="email" id="email" placeholder="Email" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white">
+            </div>
+            <div>
+                <label for="password" class="sr-only">Password</label>
+                <input type="password" id="password" placeholder="Password" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white">
+            </div>
+            <div id="auth-message" class="text-center text-sm"></div>
+            <div class="flex space-x-2">
+                <button id="login-button" type="submit" class="w-1/2 bg-purple-600 text-white font-bold py-2 rounded-lg hover:bg-purple-700 transition duration-300">Login</button>
+                <button id="register-button" type="button" class="w-1/2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white font-bold py-2 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition duration-300">Register</button>
+            </div>
+        </form>
+        <div class="relative flex py-5 items-center">
+            <div class="flex-grow border-t border-gray-400 dark:border-gray-500"></div>
+            <span class="flex-shrink mx-4 text-gray-500 dark:text-gray-400">or</span>
+            <div class="flex-grow border-t border-gray-400 dark:border-gray-500"></div>
+        </div>
+        <button id="google-login-button" class="w-full bg-red-600 text-white font-bold py-2 rounded-lg hover:bg-red-700 transition duration-300 flex items-center justify-center">
+            <i class="fab fa-google mr-2"></i>Sign in with Google
+        </button>
+    </div>
+</div>
