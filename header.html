@@ -10,18 +10,17 @@
             <img src="https://firebasestorage.googleapis.com/v0/b/nalandachessacademy-474db.firebasestorage.app/o/App_assets%2Flogo.png?alt=media&token=023369a4-c43f-4278-8106-f21bcf2a350d" alt="Nalanda Chess Academy Logo" class="h-10 w-auto mr-3 rounded-md shadow-lg">                
             <h1 class="text-3xl font-extrabold rounded-md p-2 bg-white bg-opacity-20">Nalanda Chess Academy</h1>
         </div>
-        <!-- Desktop Navigation (visible on medium screens and up, hidden on small screens) -->
-        <nav class="hidden md:block">
-            <ul class="flex space-x-6 text-center">
-                <li><a href="index.html" id="home-link-desktop" data-section="home-section" class="block py-2 px-4 hover:text-purple-200 transition duration-300 rounded-md hover:bg-white hover:bg-opacity-10">Home</a></li>
-                <li><a href="index.html#vision-mission-section" id="vision-mission-link-desktop" data-section="vision-mission-section" class="block py-2 px-4 hover:text-purple-200 transition duration-300 rounded-md hover:bg-white hover:bg-opacity-10">Vision & Mission</a></li>                
-                <li><a href="contact_us.html" id="contact-link-desktop" class="block py-2 px-4 hover:text-purple-200 transition duration-300 rounded-md hover:bg-white hover:bg-opacity-10">Contact Us</a></li>
-                <li><a href="index.html#play-section" id="play-link-desktop" data-section="play-section" class="block py-2 px-4 hover:text-purple-200 transition duration-300 rounded-md hover:bg-white hover:bg-opacity-10">Play</a></li>
-                <li><a href="index.html#profile-section" id="profile-link-desktop" data-section="profile-section" class="block py-2 px-4 hover:text-purple-200 transition duration-300 rounded-md hover:bg-white hover:bg-opacity-10">Profile</a></li>
-                <li><button id="auth-button-desktop" class="w-full sm:w-auto bg-white text-purple-700 px-6 py-2 rounded-full shadow-lg hover:bg-purple-100 transition duration-300 font-semibold transform hover:scale-105">Login</button></li>
-            </ul>
+
+        <!-- Desktop Navigation Links (visible on medium screens and up, hidden on small screens)-->
+        <nav class="hidden md:flex space-x-6 items-center">
+            <a href="index.html" id="home-link-desktop" class="hover:text-purple-400 transition-colors duration-300 px-3 py-2 rounded-lg">Home</a>
+            <a href="events.html" id="events-link-desktop" class="hover:text-purple-400 transition-colors duration-300 px-3 py-2 rounded-lg">Events</a>
+            <a href="gallery.html" id="gallery-link-desktop" class="hover:text-purple-400 transition-colors duration-300 px-3 py-2 rounded-lg">Gallery</a>
+            <a href="hall_of_fame.html" id="hall-of-fame-link-desktop" class="hover:text-purple-400 transition-colors duration-300 px-3 py-2 rounded-lg">Hall Of Fame</a>
+            <a href="coaching.html" id="coaching-link-desktop" class="hover:text-purple-400 transition-colors duration-300 px-3 py-2 rounded-lg">Coaching</a>
+            <a href="contact_us.html" id="contact-us-link-desktop" class="hover:text-purple-400 transition-colors duration-300 px-3 py-2 rounded-lg">Contact Us</a>
+            <a href="login.html" id="login-link-desktop" class="bg-purple-600 text-white px-4 py-2 rounded-full font-semibold shadow-lg hover:bg-purple-700 transition duration-300 transform hover:scale-105">Login</a>
         </nav>
-        <div class="md:hidden"></div> 
     </div>
 </header>
 
@@ -35,43 +34,43 @@
     </div>
 </header>
 
-<!-- Bottom Navigation Bar (Mobile) -->
-<nav class="fixed bottom-0 left-0 right-0 bg-gray-800 text-white p-2 shadow-lg z-40 md:hidden">
-    <ul class="flex justify-around items-center h-full">
+<!-- Bottom Fixed Navigation for Mobile -->
+<nav class="fixed bottom-0 left-0 right-0 md:hidden bg-gray-900 text-white z-50">
+    <ul class="flex justify-around items-center h-16">
         <li>
-            <a href="index.html" data-section="home-section" class="bottom-nav-item flex flex-col items-center text-xs p-2 rounded-md hover:bg-gray-700">
-                <i class="fas fa-home text-xl mb-1"></i>
-                <span>Home</span>
+            <a href="index.html" class="flex flex-col items-center justify-center p-2 rounded-lg text-sm text-gray-400 hover:text-purple-400">
+                <i class="fas fa-home text-xl"></i>
+                <span class="mt-1">Home</span>
             </a>
         </li>
         <li>
-            <a href="index.html#vision-mission-section" data-section="vision-mission-section" class="bottom-nav-item flex flex-col items-center text-xs p-2 rounded-md hover:bg-gray-700">
-                <i class="fas fa-lightbulb text-xl mb-1"></i>
-                <span>Vision</span>
+            <a href="events.html" class="flex flex-col items-center justify-center p-2 rounded-lg text-sm text-gray-400 hover:text-purple-400">
+                <i class="fas fa-calendar-alt text-xl"></i>
+                <span class="mt-1">Events</span>
             </a>
         </li>        
         <li>
-            <a href="contact_us.html" class="bottom-nav-item flex flex-col items-center text-xs p-2 rounded-md hover:bg-gray-700">
-                <i class="fas fa-envelope text-xl mb-1"></i>
-                <span>Contact</span>
+            <a href="gallery.html" class="flex flex-col items-center justify-center p-2 rounded-lg text-sm text-gray-400 hover:text-purple-400">
+                <i class="fas fa-images text-xl"></i>
+                <span class="mt-1">Gallery</span>
             </a>
         </li>
         <li>
-            <a href="index.html#play-section" data-section="play-section" class="bottom-nav-item flex flex-col items-center text-xs p-2 rounded-md hover:bg-gray-700">
-                <i class="fas fa-chess-board text-xl mb-1"></i>
-                <span>Play</span>
+            <a href="hall_of_fame.html" class="flex flex-col items-center justify-center p-2 rounded-lg text-sm text-gray-400 hover:text-purple-400">
+                <i class="fas fa-award text-xl"></i>
+                <span class="mt-1">Hall of Fame</span>
             </a>
         </li>
         <li>
-            <a href="index.html#profile-section" data-section="profile-section" class="bottom-nav-item flex flex-col items-center text-xs p-2 rounded-md hover:bg-gray-700">
-                <i class="fas fa-user text-xl mb-1"></i>
-                <span>Profile</span>
+            <a href="coaching.html" class="flex flex-col items-center justify-center p-2 rounded-lg text-sm text-gray-400 hover:text-purple-400">
+                <i class="fas fa-chalkboard-teacher text-xl"></i>
+                <span class="mt-1">Coaching</span>
             </a>
         </li>
         <li>
-            <a href="index.html#auth-modal" data-section="auth-modal" class="bottom-nav-item flex flex-col items-center text-xs p-2 rounded-md hover:bg-gray-700">
-                <i class="fas fa-sign-in-alt text-xl mb-1"></i>
-                <span id="bottom-nav-auth-text">Login</span>
+            <a href="contact_us.html" class="flex flex-col items-center justify-center p-2 rounded-lg text-sm text-gray-400 hover:text-purple-400">
+                <i class="fas fa-envelope text-xl"></i>
+                <span class="mt-1">Contact</span>
             </a>
         </li>
     </ul>
