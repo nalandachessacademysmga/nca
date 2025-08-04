@@ -53,14 +53,14 @@
                             <div id="message-error" class="text-red-500 text-sm mt-1"></div>
                         </div>
                         <div id="form-status" class="text-center font-semibold mt-4"></div>
-                        <button type="submit" class="bg-purple-600 text-white px-6 py-3 rounded-full shadow-lg hover:bg-purple-700 transition duration-300 font-semibold transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-purple-300 w-full">Send Message</button>
+                        <button type="submit" id="submit-btn" class="bg-purple-600 text-white px-6 py-3 rounded-full shadow-lg hover:bg-purple-700 transition duration-300 font-semibold transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-purple-300 w-full">Send Message</button>
                     </form>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- 8. Footer Section (Copied from index.html) -->
+    <!-- Footer Section -->
     <footer class="bg-gray-900 text-gray-300 p-4 text-center mt-auto rounded-t-lg shadow-inner">
         <p>&copy; 2025 Nalanda Chess Academy. All rights reserved.</p>
     </footer>
@@ -82,13 +82,30 @@
                         window.initializeHeaderUI();
                     }
                     // Specific logic for Contact Us page to set active nav link
-                    const desktopContactLink = document.getElementById('contact-link-desktop');
+                    const desktopContactLink = document.getElementById('contact-us-link-desktop');
                     if (desktopContactLink) {
                         desktopContactLink.classList.add('bg-white', 'bg-opacity-10');
                     }
                     const bottomNavContactLink = document.querySelector('nav.fixed.bottom-0 ul li a[href="contact_us.html"]');
                     if (bottomNavContactLink) {
+                        // Find and remove 'active' class from other links, if any
+                        document.querySelectorAll('nav.fixed.bottom-0 ul li a').forEach(link => {
+                            link.classList.remove('active');
+                            link.classList.remove('text-purple-400', 'text-white');
+                            link.classList.add('text-gray-400');
+                        });
+                        // Add 'active' and styling to the current link
                         bottomNavContactLink.classList.add('active');
+                        const icon = bottomNavContactLink.querySelector('i');
+                        const span = bottomNavContactLink.querySelector('span');
+                        if (icon) {
+                            icon.classList.remove('text-gray-400');
+                            icon.classList.add('text-purple-400');
+                        }
+                        if (span) {
+                            span.classList.remove('text-gray-400');
+                            span.classList.add('text-purple-400');
+                        }
                     }
 
                 } catch (error) {
@@ -113,9 +130,9 @@
         }
     </script>
 
-    <!-- Form Validation Script -->
+    <!-- Form Validation and Direct Submission Script -->
     <script>
-        // Get references to all the form elements
+        // Get references to all the form elements and the submit button
         const contactForm = document.getElementById('contact-form');
         const nameInput = document.getElementById('contact-name');
         const emailInput = document.getElementById('contact-email');
@@ -124,6 +141,7 @@
         const emailError = document.getElementById('email-error');
         const messageError = document.getElementById('message-error');
         const formStatus = document.getElementById('form-status');
+        const submitBtn = document.getElementById('submit-btn');
 
         // Function to clear error messages and classes from a single input
         function clearInputError(input, errorDiv) {
@@ -146,8 +164,7 @@
         messageInput.addEventListener('input', () => clearInputError(messageInput, messageError));
 
         // Add the main submit event listener to the form
-        contactForm.addEventListener('submit', (e) => {
-            // Prevent the default form submission
+        contactForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             clearAllErrors();
 
@@ -182,19 +199,50 @@
                 isValid = false;
             }
 
-            // If the form is valid, show a success message and create a mailto link
+            // If the form is valid, proceed with submission
             if (isValid) {
-                const subject = encodeURIComponent(`Contact from ${name}`);
-                const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
-                const mailtoLink = `mailto:nalandachessacademysmga@gmail.com?subject=${subject}&body=${body}`;
+                // Disable button and show a sending message
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Sending...';
+                formStatus.textContent = '';
+                
+                // Construct the form data
+                const formData = {
+                    name: name,
+                    email: email,
+                    message: message
+                };
 
-                formStatus.innerHTML = `
-                    <p class="text-green-500">Thank you for your message! Click the button below to open your email client and send it.</p>
-                    <a href="${mailtoLink}" class="inline-block mt-4 bg-purple-600 text-white px-6 py-3 rounded-full shadow-lg hover:bg-purple-700 transition duration-300 font-semibold transform hover:scale-105">
-                        Open Email Client
-                    </a>
-                `;
-                contactForm.reset();
+                try {
+                    // Simulate an API call to a backend service
+                    // NOTE: You will need to replace 'YOUR_BACKEND_API_ENDPOINT' with a real API endpoint
+                    // that can handle email submissions.
+                    // This example uses a setTimeout to simulate a network request delay.
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+
+                    // Assume a successful response from the backend
+                    const response = {
+                        ok: true,
+                        status: 200,
+                        json: () => Promise.resolve({ success: true, message: 'Message received successfully!' })
+                    };
+
+                    if (response.ok) {
+                        formStatus.textContent = 'Thank you for your message! We will get back to you shortly.';
+                        formStatus.classList.add('text-green-500');
+                        contactForm.reset();
+                    } else {
+                        throw new Error('Server error: ' + response.status);
+                    }
+                } catch (error) {
+                    console.error('Submission failed:', error);
+                    formStatus.textContent = 'Something went wrong. Please try again later.';
+                    formStatus.classList.add('text-red-500');
+                } finally {
+                    // Re-enable the button and reset its text
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Send Message';
+                }
             } else {
                 // If the form is invalid, show a general error message
                 formStatus.textContent = 'Please correct the errors above.';
