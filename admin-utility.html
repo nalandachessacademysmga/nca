@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NCA Admin - Utility</title>
+    <!-- Tailwind CSS for a modern, responsive design -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 antialiased flex flex-col min-h-screen">
+    
+    <!-- Main Content Area -->
+    <main class="p-4 md:p-8 flex-grow pb-20 md:pb-8">
+
+        <!-- Admin Page Title -->
+        <section class="max-w-6xl mx-auto text-center py-8">
+            <h1 class="text-4xl font-extrabold text-gray-800 mb-2">ADMIN UTILITY DASHBOARD</h1>
+            <h3 id="auth-status" class="text-xl text-gray-600 font-semibold">Please sign in to manage content.</h3>
+        </section>
+
+        <section id="auth-section" class="max-w-md mx-auto my-8 p-6 bg-white rounded-lg shadow-xl">
+            <form id="auth-form" class="space-y-4">
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                    <input type="email" id="email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm p-2" placeholder="admin@nalanda.com" required>
+                </div>
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                    <input type="password" id="password" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm p-2" required>
+                </div>
+                <div id="auth-error" class="text-red-500 text-sm hidden"></div>
+                <button type="submit" id="auth-button" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-full transition-colors duration-300 shadow-lg focus:outline-none focus:ring-4 focus:ring-purple-300">
+                    Sign In
+                </button>
+            </form>
+            <div id="logout-button-container" class="mt-4 hidden text-center">
+                <button id="logout-button" class="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-full transition-colors duration-300 shadow-lg focus:outline-none focus:ring-4 focus:ring-red-300">
+                    Sign Out
+                </button>
+            </div>
+        </section>
+
+        <!-- Admin Dashboard (Initially hidden) -->
+        <div id="admin-dashboard" class="max-w-6xl mx-auto hidden">
+
+            <!-- Add/Edit Achievement Form -->
+            <section class="my-8 p-8 bg-gray-50 border-2 border-gray-200 rounded-lg shadow-2xl">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Add New Achievement</h2>
+                <form id="achievement-form" class="space-y-4">
+                    <div>
+                        <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
+                        <input type="text" id="title" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm p-2" placeholder="e.g., Aryan Sharma - State U10 Champion">
+                    </div>
+                    <div>
+                        <label for="date" class="block text-sm font-medium text-gray-700">Date</label>
+                        <input type="text" id="date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm p-2" placeholder="e.g., August 2025">
+                    </div>
+                    <div>
+                        <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                        <textarea id="description" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm p-2" placeholder="Write a brief description of the achievement..."></textarea>
+                    </div>
+                    <div>
+                        <label for="priority" class="block text-sm font-medium text-gray-700">Priority</label>
+                        <input type="number" id="priority" value="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm p-2">
+                        <p class="text-xs text-gray-500 mt-1">Lower numbers appear first (e.g., 1 is a higher priority than 2).</p>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <label class="block text-sm font-medium text-gray-700">Media</label>
+                        <div class="flex items-center space-x-4">
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="mediaType" value="image" checked class="form-radio text-purple-600 focus:ring-purple-500">
+                                <span class="ml-2">Image Upload</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="mediaType" value="video" class="form-radio text-purple-600 focus:ring-purple-500">
+                                <span class="ml-2">Video URL</span>
+                            </label>
+                        </div>
+                        <div id="image-upload-container">
+                            <label for="imageFile" class="block text-sm font-medium text-gray-700">Image File</label>
+                            <input type="file" id="imageFile" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100">
+                        </div>
+                        <div id="video-url-container" class="hidden">
+                            <label for="videoUrl" class="block text-sm font-medium text-gray-700">YouTube/Vimeo URL</label>
+                            <input type="text" id="videoUrl" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm p-2" placeholder="e.g., https://www.youtube.com/watch?v=xxxxxxxxxxx">
+                        </div>
+                    </div>
+                    
+                    <div id="form-message" class="text-sm font-semibold hidden"></div>
+
+                    <div class="flex space-x-4">
+                        <button type="submit" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-full transition-colors duration-300 shadow-lg focus:outline-none focus:ring-4 focus:ring-green-300">
+                            Add Achievement
+                        </button>
+                        <button type="button" id="cancel-edit-btn" class="w-full bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-full transition-colors duration-300 shadow-lg focus:outline-none focus:ring-4 focus:ring-gray-300 hidden">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </section>
+            
+            <!-- List of Achievements -->
+            <section class="my-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Existing Achievements</h2>
+                <div id="achievements-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Achievements will be dynamically loaded here -->
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Custom Modal/Message Box (used instead of alert() and confirm()) -->
+    <div id="custom-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full text-center">
+            <p id="modal-text" class="text-gray-800 text-lg mb-4"></p>
+            <div id="modal-actions" class="flex justify-around">
+                <button id="modal-confirm-btn" class="hidden bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+                    Confirm
+                </button>
+                <button id="modal-cancel-btn" class="hidden bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg transition-colors">
+                    Cancel
+                </button>
+                <button id="modal-ok-btn" class="hidden bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer class="bg-gray-900 text-gray-300 p-4 text-center mt-auto rounded-t-lg shadow-inner">
+        <p>&copy; 2025 Nalanda Chess Academy. All rights reserved.</p>
+    </footer>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        // --- Firebase SDK Imports ---
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, EmailAuthProvider, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot, getDoc, query, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
+
+        // --- Global Variables (Provided by Canvas Environment) ---
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+		const firebaseConfig = {
+		  apiKey: "AIzaSyD86XmFYQOqli4BQsNQERh-kDTYeetAqqM",
+		  authDomain: "nalandachessacademy-474db.firebaseapp.com",		  
+		  projectId: "nalandachessacademy-474db",
+		  storageBucket: "nalandachessacademy-474db-7w9pw.firebasestorage.app",
+		  messagingSenderId: "30847597506",
+		  appId: "1:30847597506:web:05c9013240835edee9745b",
+		  measurementId: "G-Z301KFQ12C"
+		};
+        // const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        // --- Firebase Initialization ---
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        const storage = getStorage(app);
+        // const provider = new GoogleAuthProvider(); // Removed Google Auth Provider
+
+        // --- DOM Elements ---
+        const authStatus = document.getElementById('auth-status');
+        const authForm = document.getElementById('auth-form');
+        const authButton = document.getElementById('auth-button');
+        const authError = document.getElementById('auth-error');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const logoutButton = document.getElementById('logout-button');
+        const logoutButtonContainer = document.getElementById('logout-button-container');
+
+        const adminDashboard = document.getElementById('admin-dashboard');
+        const achievementForm = document.getElementById('achievement-form');
+        const achievementsList = document.getElementById('achievements-list');
+        const formMessage = document.getElementById('form-message');
+        const mediaTypeRadios = document.getElementsByName('mediaType');
+        const imageUploadContainer = document.getElementById('image-upload-container');
+        const videoUrlContainer = document.getElementById('video-url-container');
+        const imageFile = document.getElementById('imageFile');
+        const cancelEditBtn = document.getElementById('cancel-edit-btn');
+        const submitButton = achievementForm.querySelector('button[type="submit"]');
+
+        const modal = document.getElementById('custom-modal');
+        const modalText = document.getElementById('modal-text');
+        const modalConfirmBtn = document.getElementById('modal-confirm-btn');
+        const modalCancelBtn = document.getElementById('modal-cancel-btn');
+        const modalOkBtn = document.getElementById('modal-ok-btn');
+
+        let isEditMode = false;
+        let currentEditDocId = null;
+        let currentUser = null;
+        let currentUserRole = null;
+
+        // --- Custom Modal Functions ---
+        // Shows a simple alert/message modal
+        const showAlert = (message) => {
+            modalText.textContent = message;
+            modalConfirmBtn.classList.add('hidden');
+            modalCancelBtn.classList.add('hidden');
+            modalOkBtn.classList.remove('hidden');
+            modal.classList.remove('hidden');
+        };
+
+        // Shows a confirmation modal and returns a promise
+        const showConfirmation = (message) => {
+            return new Promise((resolve) => {
+                modalText.textContent = message;
+                modalOkBtn.classList.add('hidden');
+                modalConfirmBtn.classList.remove('hidden');
+                modalCancelBtn.classList.remove('hidden');
+                modal.classList.remove('hidden');
+
+                const onConfirm = () => {
+                    hideModal();
+                    modalConfirmBtn.removeEventListener('click', onConfirm);
+                    modalCancelBtn.removeEventListener('click', onCancel);
+                    resolve(true);
+                };
+
+                const onCancel = () => {
+                    hideModal();
+                    modalConfirmBtn.removeEventListener('click', onConfirm);
+                    modalCancelBtn.removeEventListener('click', onCancel);
+                    resolve(false);
+                };
+
+                modalConfirmBtn.addEventListener('click', onConfirm);
+                modalCancelBtn.addEventListener('click', onCancel);
+            });
+        };
+
+        // Hides the modal
+        const hideModal = () => {
+            modal.classList.add('hidden');
+        };
+
+        // Event listener for the OK button on the modal
+        modalOkBtn.addEventListener('click', hideModal);
+
+        // --- UI & Event Listeners ---
+        // Function to show/hide the correct media input based on radio selection
+        mediaTypeRadios.forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                if (e.target.value === 'image') {
+                    imageUploadContainer.classList.remove('hidden');
+                    videoUrlContainer.classList.add('hidden');
+                } else {
+                    imageUploadContainer.classList.add('hidden');
+                    videoUrlContainer.classList.remove('hidden');
+                }
+            });
+        });
+
+        // Event listener for the login form submission
+        authForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            authError.classList.add('hidden');
+            const email = emailInput.value;
+            const password = passwordInput.value;
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+            } catch (error) {
+                console.error("Sign-in failed:", error);
+                authError.textContent = "Invalid email or password.";
+                authError.classList.remove('hidden');
+                showAlert("Sign-in failed. Please check your credentials.");
+            }
+        });
+
+        // Event listener for the new logout button
+        logoutButton.addEventListener('click', async () => {
+            await signOut(auth);
+        });
+        
+        // --- Data Fetching and Real-time Listener (Unchanged) ---
+        function setupRealtimeListener() {
+            // Firestore path for public data
+            const achievementsRef = collection(db, `artifacts/${appId}/public/data/achievements`);
+            
+            onSnapshot(achievementsRef, (snapshot) => {
+                const achievements = [];
+                snapshot.forEach(doc => {
+                    achievements.push({ id: doc.id, ...doc.data() });
+                });
+
+                // Sort the achievements in memory by priority and timestamp
+                achievements.sort((a, b) => {
+                    if (a.priority !== b.priority) {
+                        return a.priority - b.priority;
+                    }
+                    return b.timestamp - a.timestamp;
+                });
+                
+                // Clear the list and render the sorted achievements
+                achievementsList.innerHTML = '';
+                achievements.forEach(data => {
+                    const achievementCard = createAchievementCard(data.id, data);
+                    achievementsList.appendChild(achievementCard);
+                });
+            }, (error) => {
+                console.error("Error fetching achievements:", error);
+                showAlert('Failed to load achievements.');
+            });
+        }
+        
+        // --- UI Rendering Functions ---
+        // Function to create an achievement card element
+        function createAchievementCard(id, data) {
+            const card = document.createElement('div');
+            card.className = "bg-white rounded-lg shadow-xl overflow-hidden p-6";
+            
+            const mediaHtml = data.mediaType === 'image' 
+                ? `<img src="${data.mediaUrl}" alt="${data.altText || 'Achievement image'}" class="w-full h-48 object-cover mb-4 rounded-md">`
+                : `<div class="relative w-full h-48 bg-gray-300 flex items-center justify-center mb-4 rounded-md"><i class="fas fa-video text-5xl text-gray-600"></i></div>`;
+            
+            const cardContent = `
+                ${mediaHtml}
+                <h3 class="text-xl font-bold text-gray-800 mb-1">${data.title}</h3>
+                <p class="text-gray-600 text-sm mb-2">${data.date}</p>
+                <p class="text-gray-700 leading-relaxed text-sm mb-4">${data.description}</p>
+                <div class="flex justify-between items-center text-xs text-gray-500">
+                    <span>Priority: ${data.priority}</span>
+                    <span>ID: ${id}</span>
+                </div>
+                <div class="mt-4 flex space-x-2">
+                    ${(currentUserRole === 'admin' || currentUserRole === 'editor') ? `
+                        <button data-id="${id}" class="edit-btn bg-yellow-500 text-white font-semibold py-2 px-4 rounded-full text-xs hover:bg-yellow-600">Edit</button>
+                    ` : ''}
+                    ${currentUserRole === 'admin' ? `
+                        <button data-id="${id}" data-media-url="${data.mediaUrl}" data-media-type="${data.mediaType}" class="delete-btn bg-red-500 text-white font-semibold py-2 px-4 rounded-full text-xs hover:bg-red-600">Delete</button>
+                    ` : ''}
+                </div>
+            `;
+            card.innerHTML = cardContent;
+
+            // Add event listeners for edit/delete buttons if they exist
+            if (currentUserRole === 'admin' || currentUserRole === 'editor') {
+                card.querySelector('.edit-btn')?.addEventListener('click', (e) => editAchievement(e.target.dataset.id, data));
+            }
+            if (currentUserRole === 'admin') {
+                card.querySelector('.delete-btn')?.addEventListener('click', (e) => deleteAchievement(e.target.dataset.id, e.target.dataset.mediaUrl));
+            }
+
+            return card;
+        }
+
+        // Function to handle authentication and role checking
+        async function checkUserRoleAndRender(user) {
+            if (user) {
+                // User is signed in. Now, check their role in the 'admins' collection.
+                // const userDocRef = doc(db, 'artifacts', appId, 'admins', user.uid);
+				const userDocRef = doc(db, 'users', user.uid);
+				// console.log('2. Attempting to fetch document from path:', userDocRef.path);
+                try {
+                    const userDoc = await getDoc(userDocRef);
+					// console.log('3. User document fetched. exists:', userDoc.exists());
+					// Store the user's role for later checks
+                    currentUserRole = userDoc.data().role;
+					
+                    // Check if the user document exists and has an 'admin' or 'editor' role
+                    if (userDoc.exists() && (currentUserRole === 'admin' || currentUserRole === 'editor')) {
+                        // console.log('4. User document data:', userDoc.data());
+                        
+						currentUser = user;                        
+                        authStatus.textContent = `Signed in as ${user.email}. Role: ${currentUserRole}`;
+                        
+                        authForm.classList.add('hidden');
+                        logoutButtonContainer.classList.remove('hidden');
+                        adminDashboard.classList.remove('hidden');
+                        
+                        setupRealtimeListener();
+                    } else {
+                        // User is authenticated but does not have a valid role.
+                        // We must sign them out and show an error message.
+                        await signOut(auth);
+                        showAlert('Access denied: You do not have the required permissions.');
+                    }
+                } catch (error) {
+                    console.error('Error fetching user role:', error);
+                    await signOut(auth);
+                    showAlert('An error occurred. Please try signing in again.');
+                }
+            } else {
+                // User is signed out.
+                currentUser = null;
+                currentUserRole = null;
+                authStatus.textContent = 'Please sign in to manage content.';
+                authForm.classList.remove('hidden');
+                logoutButtonContainer.classList.add('hidden');
+                adminDashboard.classList.add('hidden');
+                achievementsList.innerHTML = '';
+            }
+        }
+
+        // --- MAIN APPLICATION LOGIC ---
+        // Authentication state observer
+        onAuthStateChanged(auth, (user) => {
+            checkUserRoleAndRender(user);
+        });
+
+        // Handle form submission for adding/editing an achievement
+        achievementForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            formMessage.classList.add('hidden');
+            
+            const title = document.getElementById('title').value;
+            const date = document.getElementById('date').value;
+            const description = document.getElementById('description').value;
+            const priority = parseInt(document.getElementById('priority').value, 10);
+            const mediaType = document.querySelector('input[name="mediaType"]:checked').value;
+            const imageFile = document.getElementById('imageFile').files[0];
+            const videoUrl = document.getElementById('videoUrl').value;
+            
+            if (!title || !description || !date) {
+                showAlert("Please fill in all required fields.");
+                return;
+            }
+            if (mediaType === 'image' && !imageFile && !isEditMode) {
+                showAlert("Please select an image file to upload.");
+                return;
+            }
+            if (mediaType === 'video' && !videoUrl) {
+                showAlert("Please provide a video URL.");
+                return;
+            }
+
+            submitButton.disabled = true;
+            submitButton.textContent = isEditMode ? 'Updating...' : 'Adding...';
+
+            try {
+                let mediaUrl = isEditMode ? (await getDoc(doc(db, `artifacts/${appId}/public/data/achievements/${currentEditDocId}`))).data().mediaUrl : null;
+
+                if (mediaType === 'image' && imageFile) {
+                    const storageRef = ref(storage, `achievements/${Date.now()}-${imageFile.name}`);
+                    const uploadTask = await uploadBytes(storageRef, imageFile);
+                    mediaUrl = await getDownloadURL(uploadTask.ref);
+                } else if (mediaType === 'video') {
+                    mediaUrl = videoUrl;
+                }
+
+                const newAchievement = {
+                    title,
+                    date,
+                    description,
+                    priority: isNaN(priority) ? 0 : priority,
+                    mediaType,
+                    mediaUrl,
+                    timestamp: Date.now()
+                };
+
+                const docRef = isEditMode 
+                    ? doc(db, `artifacts/${appId}/public/data/achievements/${currentEditDocId}`)
+                    : doc(collection(db, `artifacts/${appId}/public/data/achievements`));
+                
+                await setDoc(docRef, newAchievement);
+                
+                showAlert(isEditMode ? "Achievement updated successfully!" : "Achievement added successfully!");
+                resetForm();
+
+            } catch (error) {
+                console.error("Error adding/updating achievement:", error);
+                showAlert("An error occurred. Please try again.");
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Add Achievement';
+            }
+        });
+
+        // Function to populate the form for editing an achievement
+        function editAchievement(docId, data) {
+            isEditMode = true;
+            currentEditDocId = docId;
+            document.getElementById('title').value = data.title;
+            document.getElementById('date').value = data.date;
+            document.getElementById('description').value = data.description;
+            document.getElementById('priority').value = data.priority;
+            
+            // Set the correct media type radio and show the correct input
+            if (data.mediaType === 'image') {
+                document.querySelector('input[name="mediaType"][value="image"]').checked = true;
+                imageUploadContainer.classList.remove('hidden');
+                videoUrlContainer.classList.add('hidden');
+            } else if (data.mediaType === 'video') {
+                document.querySelector('input[name="mediaType"][value="video"]').checked = true;
+                imageUploadContainer.classList.add('hidden');
+                videoUrlContainer.classList.remove('hidden');
+                document.getElementById('videoUrl').value = data.mediaUrl;
+            }
+            
+            submitButton.textContent = 'Update Achievement';
+            cancelEditBtn.classList.remove('hidden');
+            
+            // Scroll to the top of the form for easy editing
+            achievementForm.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Function to delete an achievement
+        async function deleteAchievement(docId, mediaUrl) {
+            const confirmed = await showConfirmation('Are you sure you want to delete this achievement?');
+            if (!confirmed) return;
+            
+            try {
+                // Delete image from storage if it exists
+                if (mediaUrl && mediaUrl.includes('firebasestorage.googleapis.com')) {
+                    const imageRef = ref(storage, mediaUrl);
+                    await deleteObject(imageRef);
+                }
+                
+                // Delete document from Firestore
+                await deleteDoc(doc(db, `artifacts/${appId}/public/data/achievements/${docId}`));
+                
+                showAlert("Achievement deleted successfully!");
+            } catch (error) {
+                console.error("Error deleting achievement:", error);
+                showAlert("An error occurred while deleting.");
+            }
+        }
+        
+        // Function to reset the form after submit or cancel
+        function resetForm() {
+            achievementForm.reset();
+            isEditMode = false;
+            currentEditDocId = null;
+            submitButton.textContent = 'Add Achievement';
+            cancelEditBtn.classList.add('hidden');
+            // Reset to default image upload view
+            document.querySelector('input[name="mediaType"][value="image"]').checked = true;
+            imageUploadContainer.classList.remove('hidden');
+            videoUrlContainer.classList.add('hidden');
+        }
+
+        // Cancel button event listener
+        cancelEditBtn.addEventListener('click', resetForm);
+
+    </script>
+</body>
+</html>
