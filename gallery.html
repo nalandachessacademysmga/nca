@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- File: gallery.html 
+Description: Contains functionality to display the gallary images as thumbnail. On click, the image is enlarged. -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nalanda Chess Academy - Gallery</title>
+    <!-- Use Tailwind CSS for a modern, responsive design -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Custom styles for the gallery images to ensure they fill their space without distortion */
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            cursor: pointer; /* Add a pointer to indicate it's clickable */
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        
+        .gallery-item:hover img {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
+        @media (min-width: 768px) {
+            .gallery-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .gallery-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        /* Custom styles for the active nav link */
+        nav.fixed.bottom-0 ul li a.active span,
+        nav.fixed.bottom-0 ul li a.active i {
+            color: #8b5cf6; /* purple-400 */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 antialiased flex flex-col min-h-screen">
+
+    <!-- Placeholder for the dynamically loaded header -->
+    <div id="header-placeholder"></div>
+
+    <!-- Main Content Area -->
+    <main class="p-4 md:p-8 flex-grow pb-20 md:pb-8">
+
+        <!-- Gallery Section Title -->
+        <section class="max-w-6xl mx-auto text-center py-8">
+            <h1 class="text-4xl font-extrabold text-gray-800 mb-2">GALLERY</h1>
+            <h3 class="text-xl text-gray-600 font-semibold">Memorable Moments from Our Academy</h3>
+        </section>
+
+        <!-- Image Gallery Grid -->
+        <section class="max-w-6xl mx-auto my-8">
+            <div class="gallery-grid">
+                <!-- Gallery Item 1 (Tall Image) -->
+                <div class="gallery-item rounded-lg overflow-hidden shadow-lg col-span-1 row-span-2">
+                    <img src="https://placehold.co/400x800/E53E3E/FFFFFF?text=Tournament" alt="Chess Tournament">
+                </div>
+                <!-- Gallery Item 2 (Standard Square Image) -->
+                <div class="gallery-item rounded-lg overflow-hidden shadow-lg col-span-1 row-span-1">
+                    <img src="https://placehold.co/600x600/4299E1/FFFFFF?text=Students"  alt="Chess Coaching Session">
+                </div>
+                <!-- Gallery Item 3 (Wide Image) Kids Coaching -->
+                <div class="gallery-item rounded-lg overflow-hidden shadow-lg col-span-2 row-span-1">
+                    <img src="https://firebasestorage.googleapis.com/v0/b/nalandachessacademy-474db.firebasestorage.app/o/App_assets%2FGallery%2FKidsCoaching1.jpg?alt=media&token=80fb25e7-d3ed-441e-a28c-ec06ff96d200" alt="Students in class">
+                </div>
+                <!-- Gallery Item 4 (Kishan1) -->
+                <div class="gallery-item rounded-lg overflow-hidden shadow-lg col-span-1 row-span-1">
+                    <img src="https://firebasestorage.googleapis.com/v0/b/nalandachessacademy-474db.firebasestorage.app/o/App_assets%2FGallery%2FKishan1.jpg?alt=media&token=665f7e40-fdcb-436a-9d25-9b163e47dc38" alt="Award Ceremony">
+                </div>
+                <!-- Gallery Item 5 (Standard Square Image) -->
+                <div class="gallery-item rounded-lg overflow-hidden shadow-lg col-span-1 row-span-1">
+                    <img src="https://placehold.co/600x600/9F7AEA/FFFFFF?text=Group+Photo" alt="Group photo">
+                </div>
+                <!-- Gallery Item 6 (Kids Play1) -->
+                <div class="gallery-item rounded-lg overflow-hidden shadow-lg col-span-1 row-span-2">
+                    <img src="https://firebasestorage.googleapis.com/v0/b/nalandachessacademy-474db.firebasestorage.app/o/App_assets%2FGallery%2FKidsPlay1.jpg?alt=media&token=1740720f-ca69-487b-bff1-c966a200d9ce" alt="Chess Match">
+                </div>
+                <!-- Gallery Item 7 (Kishan2) -->
+                <div class="gallery-item rounded-lg overflow-hidden shadow-lg col-span-2 row-span-1">
+                    <img src="https://firebasestorage.googleapis.com/v0/b/nalandachessacademy-474db.firebasestorage.app/o/App_assets%2FGallery%2FKishan2.jpg?alt=media&token=dee15d92-b91e-435f-b8e2-cf5f1bb6cf24" alt="Asian Games">
+                </div>
+                <!-- Gallery Item 8 (KishanModi1) -->
+                <div class="gallery-item rounded-lg overflow-hidden shadow-lg col-span-1 row-span-1">
+                    <img src="https://firebasestorage.googleapis.com/v0/b/nalandachessacademy-474db.firebasestorage.app/o/App_assets%2FGallery%2FKishanModi1.jpg?alt=media&token=bc11c538-da3d-4ff2-9bdc-a9100b4cd1b3" alt="Kishan and Modi">
+                </div>
+                <!-- Gallery Item 9 (Standard Square Image) -->
+                <div class="gallery-item rounded-lg overflow-hidden shadow-lg col-span-1 row-span-1">
+                    <img src="https://placehold.co/600x600/D53F8C/FFFFFF?text=Awards" alt="Award winners">
+                </div>
+                <!-- Gallery Item 10 (Standard Square Image) -->
+                <div class="gallery-item rounded-lg overflow-hidden shadow-lg col-span-1 row-span-1">
+                    <img src="https://placehold.co/600x600/5A67D8/FFFFFF?text=Concentration" alt="Student concentrating on the board">
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal for enlarged image view (initially hidden) -->
+    <div id="image-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4">
+        <div class="relative max-w-full max-h-full">
+            <!-- Close button -->
+            <button id="close-modal-btn" class="absolute top-4 right-4 text-white text-3xl cursor-pointer">
+                &times;
+            </button>
+            <!-- Large image container -->
+            <img id="enlarged-image" src="" alt="Enlarged gallery image" class="max-w-full max-h-screen rounded-lg">
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer class="bg-gray-900 text-gray-300 p-4 text-center mt-auto rounded-t-lg shadow-inner">
+        <p>&copy; 2025 Nalanda Chess Academy. All rights reserved.</p>
+    </footer>
+
+    <!-- Script to load the header dynamically and handle page logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const headerPlaceholder = document.getElementById('header-placeholder');
+            if (headerPlaceholder) {
+                try {
+                    const response = await fetch('header.html');
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const headerHtml = await response.text();
+                    headerPlaceholder.innerHTML = headerHtml;
+
+                    // After header is loaded, initialize its UI elements
+                    if (window.initializeHeaderUI) {
+                        window.initializeHeaderUI();
+                    }
+
+                    // Specific logic for the Gallery page to set active nav link
+                    const desktopGalleryLink = document.getElementById('gallery-link-desktop');
+                    if (desktopGalleryLink) {
+                        desktopGalleryLink.classList.add('bg-white', 'bg-opacity-10');
+                    }
+                    const bottomNavGalleryLink = document.querySelector('nav.fixed.bottom-0 ul li a[href="gallery.html"]');
+                    if (bottomNavGalleryLink) {
+                        // Find and remove 'active' class from other links, if any
+                        document.querySelectorAll('nav.fixed.bottom-0 ul li a').forEach(link => {
+                            link.classList.remove('active');
+                            link.classList.remove('text-purple-400', 'text-white');
+                            link.classList.add('text-gray-400');
+                        });
+                        // Add 'active' and styling to the current link
+                        bottomNavGalleryLink.classList.add('active');
+                        const icon = bottomNavGalleryLink.querySelector('i');
+                        const span = bottomNavGalleryLink.querySelector('span');
+                        if (icon) {
+                            icon.classList.remove('text-gray-400');
+                            icon.classList.add('text-purple-400');
+                        }
+                        if (span) {
+                            span.classList.remove('text-gray-400');
+                            span.classList.add('text-purple-400');
+                        }
+                    }
+
+                } catch (error) {
+                    console.error('Error loading header:', error);
+                }
+            }
+        });
+
+        // Get all gallery images
+        const galleryImages = document.querySelectorAll('.gallery-item img');
+        // Get the modal and the enlarged image element
+        const imageModal = document.getElementById('image-modal');
+        const enlargedImage = document.getElementById('enlarged-image');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+
+        // Function to open the modal
+        function openModal(imageSrc) {
+            enlargedImage.src = imageSrc;
+            imageModal.classList.remove('hidden');
+        }
+
+        // Function to close the modal
+        function closeModal() {
+            imageModal.classList.add('hidden');
+            enlargedImage.src = ''; // Clear the image source
+        }
+
+        // Add click event listeners to each gallery image
+        galleryImages.forEach(image => {
+            image.addEventListener('click', (e) => {
+                const imageSrc = e.target.src;
+                openModal(imageSrc);
+            });
+        });
+
+        // Add event listener to close button
+        closeModalBtn.addEventListener('click', closeModal);
+
+        // Add event listener to close modal when clicking on the background
+        imageModal.addEventListener('click', (e) => {
+            // Close the modal only if the click is on the modal backdrop, not the image itself
+            if (e.target === imageModal) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
