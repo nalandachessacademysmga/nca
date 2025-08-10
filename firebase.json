@@ -7,6 +7,10 @@
       "**/node_modules/**"
     ],
     "rewrites": [
+	  {
+        "source": "/admin",
+        "destination": "/admin-utility.html"
+      },
       {
         "source": "**",
         "destination": "/index.html"
