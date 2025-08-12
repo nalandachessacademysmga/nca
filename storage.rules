@@ -60,5 +60,16 @@ service cloud.firestore {
         // A more specific rule for delete, only allowing admins.
         allow delete: if isAdmin();
     }
+	
+	// -------------------------------------------------------------
+	// Rules for the testimonials collection
+	// -------------------------------------------------------------
+	match /testimonials/{testimonialId} {
+		// Allow public read access to testimonials
+		allow read;
+		// Only admins and editors can write or delete testimonials
+		allow write: if isEditorOrAdmin();
+		allow delete: if isAdmin();
+	}
   }
 }
