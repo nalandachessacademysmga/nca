@@ -17,7 +17,23 @@
         /* Custom styles for the active nav link */
         nav.fixed.bottom-0 ul li a.active span,
         nav.fixed.bottom-0 ul li a.active i {
-            color: #8b5cf6; /* purple-400 */
+            color: #8b5cf6;
+        }
+        .wall-of-fame-card {
+            flex: 0 0 auto; /* Added to make cards not grow and shrink */
+            width: 300px; /* Fixed width for horizontal scrolling */
+            transition: transform 0.3s ease-in-out;
+        }
+        .wall-of-fame-card:hover {
+            transform: scale(1.05);
+        }
+        /* Custom scrollbar for horizontal scrolling (optional but good for UX) */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
         }
     </style>
 </head>
@@ -35,85 +51,17 @@
             <h3 class="text-xl text-gray-600 font-semibold">Celebrating Our Champions and Their Achievements</h3>
         </section>
 
-        <!-- Achievements Grid -->
-        <section class="max-w-6xl mx-auto my-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Achievement Card 1 -->
-            <div class="bg-white rounded-lg shadow-xl overflow-hidden transform transition-transform duration-300 hover:scale-105">
-                <img src="https://placehold.co/600x400/4299E1/FFFFFF?text=Champion+1" alt="Student Champion" class="w-full h-48 object-cover">
-                <div class="p-6">
-                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Aryan Sharma - State U10 Champion!</h3>
-                    <p class="text-gray-600 text-sm mb-4">August 2025 - Karnataka State Chess Championship</p>
-                    <p class="text-gray-700 leading-relaxed">
-                        We are incredibly proud of Aryan Sharma for his outstanding performance at the Karnataka State Chess Championship, securing the U10 title! His dedication and hard work truly paid off.
-                    </p>
+        <div class="relative max-w-6xl mx-auto my-4">
+            <div id="wall-of-fame-container" class="flex flex-nowrap gap-4 overflow-x-auto no-scrollbar py-2">
                 </div>
-            </div>
-
-            <!-- Achievement Card 2 -->
-            <div class="bg-white rounded-lg shadow-xl overflow-hidden transform transition-transform duration-300 hover:scale-105">
-                <img src="https://placehold.co/600x400/68D391/FFFFFF?text=Champion+2" alt="Student Achievement" class="w-full h-48 object-cover">
-                <div class="p-6">
-                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Priya Singh - National U12 Runner-Up!</h3>
-                    <p class="text-gray-600 text-sm mb-4">July 2025 - National Youth Chess Championship</p>
-                    <p class="text-gray-700 leading-relaxed">
-                        Priya Singh showcased exceptional talent and resilience to clinch the runner-up position at the National U12 Championship. Her strategic play was a highlight of the tournament.
-                    </p>
-                </div>
-            </div>
-
-            <!-- Achievement Card 3 (with video placeholder) -->
-            <div class="bg-white rounded-lg shadow-xl overflow-hidden transform transition-transform duration-300 hover:scale-105">
-                <!-- Placeholder for an embedded video -->
-                <div class="relative w-full h-48 bg-gray-300 flex items-center justify-center">
-                    <i class="fas fa-video text-5xl text-gray-600"></i>
-                    <!-- Replace with actual YouTube/Vimeo embed code -->
-                    <!-- <iframe class="w-full h-full absolute top-0 left-0" src="https://www.youtube.com/embed/YOUR_VIDEO_ID" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
-                </div>
-                <div class="p-6">
-                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Highlight Reel: Our Top Performers!</h3>
-                    <p class="text-gray-600 text-sm mb-4">June 2025 - Academy's Best Moments</p>
-                    <p class="text-gray-700 leading-relaxed">
-                        Watch the best moments from our recent internal tournaments and training sessions. See our students in action!
-                    </p>
-                </div>
-            </div>
-
-            <!-- Achievement Card 4 -->
-            <div class="bg-white rounded-lg shadow-xl overflow-hidden transform transition-transform duration-300 hover:scale-105">
-                <img src="https://placehold.co/600x400/ED8936/FFFFFF?text=Champion+3" alt="Student Achievement" class="w-full h-48 object-cover">
-                <div class="p-6">
-                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Kabir Das - District Blitz Winner!</h3>
-                    <p class="text-gray-600 text-sm mb-4">May 2025 - Shivamogga District Blitz Championship</p>
-                    <p class="text-gray-700 leading-relaxed">
-                        Kabir Das demonstrated incredible speed and tactical prowess, winning the District Blitz Championship. A true master of rapid chess!
-                    </p>
-                </div>
-            </div>
-
-            <!-- Achievement Card 5 -->
-            <div class="bg-white rounded-lg shadow-xl overflow-hidden transform transition-transform duration-300 hover:scale-105">
-                <img src="https://placehold.co/600x400/9F7AEA/FFFFFF?text=Champion+4" alt="Student Achievement" class="w-full h-48 object-cover">
-                <div class="p-6">
-                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Sneha Reddy - Best Female Player Award</h3>
-                    <p class="text-gray-600 text-sm mb-4">April 2025 - Inter-School Chess Tournament</p>
-                    <p class="text-gray-700 leading-relaxed">
-                        Sneha Reddy was honored with the Best Female Player award at the annual Inter-School Chess Tournament, showcasing her consistent performance.
-                    </p>
-                </div>
-            </div>
-
-            <!-- Achievement Card 6 -->
-            <div class="bg-white rounded-lg shadow-xl overflow-hidden transform transition-transform duration-300 hover:scale-105">
-                <img src="https://placehold.co/600x400/5A67D8/FFFFFF?text=Champion+5" alt="Student Achievement" class="w-full h-48 object-cover">
-                <div class="p-6">
-                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Rahul Kumar - Rated 1500 FIDE!</h3>
-                    <p class="text-gray-600 text-sm mb-4">March 2025 - FIDE Rating Tournament</p>
-                    <p class="text-gray-700 leading-relaxed">
-                        Congratulations to Rahul Kumar on achieving a FIDE rating of 1500! A significant milestone in his chess journey.
-                    </p>
-                </div>
-            </div>
-        </section>
+            
+            <button id="prev-btn" class="absolute top-1/2 -left-6 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full shadow-lg hover:bg-gray-700 focus:outline-none md:flex hidden">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button id="next-btn" class="absolute top-1/2 -right-6 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full shadow-lg hover:bg-gray-700 focus:outline-none md:flex hidden">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
 
     </main>
 
@@ -139,39 +87,14 @@
                     if (window.initializeHeaderUI) {
                         window.initializeHeaderUI();
                     }
-
-                    // Specific logic for the Wall of Fame page to set active nav link
-                    const desktopHallOfFameLink = document.getElementById('wall-of-fame-link-desktop');
-                    if (desktopHallOfFameLink) {
-                        desktopHallOfFameLink.classList.add('bg-white', 'bg-opacity-10');
-                    }
-                    const bottomNavHallOfFameLink = document.querySelector('nav.fixed.bottom-0 ul li a[href="wall_of_fame.html"]');
-                    if (bottomNavHallOfFameLink) {
-                        // Find and remove 'active' class from other links, if any
-                        document.querySelectorAll('nav.fixed.bottom-0 ul li a').forEach(link => {
-                            link.classList.remove('active');
-                            link.classList.remove('text-purple-400', 'text-white');
-                            link.classList.add('text-gray-400');
-                        });
-                        // Add 'active' and styling to the current link
-                        bottomNavHallOfFameLink.classList.add('active');
-                        const icon = bottomNavHallOfFameLink.querySelector('i');
-                        const span = bottomNavHallOfFameLink.querySelector('span');
-                        if (icon) {
-                            icon.classList.remove('text-gray-400');
-                            icon.classList.add('text-purple-400');
-                        }
-                        if (span) {
-                            span.classList.remove('text-gray-400');
-                            span.classList.add('text-purple-400');
-                        }
-                    }
-
                 } catch (error) {
                     console.error('Error loading header:', error);
                 }
             }
         });
     </script>
+
+    <script src="wall-of-fame.js" type="module"></script>
+
 </body>
 </html>
