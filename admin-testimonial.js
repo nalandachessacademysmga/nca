@@ -5,10 +5,11 @@ import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "http
 
 // DOM elements from admin-utility.html
 const testimonialForm = document.getElementById('testimonial-form');
+console.log("Form element found:", testimonialForm);
 const testimonialsList = document.getElementById('testimonials-list');
 const testimonialNameInput = document.getElementById('testimonial-name');
 const testimonialTitleInput = document.getElementById('testimonial-title');
-const testimonialQuoteInput = document.getElementById('testimonial-quote');
+const testimonialTextInput = document.getElementById('testimonial-text'); 
 const testimonialPriorityInput = document.getElementById('testimonial-priority');
 const testimonialPhotoFile = document.getElementById('testimonial-photo-file');
 const submitTestimonialBtn = document.getElementById('submit-testimonial-btn');
@@ -21,6 +22,7 @@ let showAlert, showConfirmation;
 // State variables
 let isTestimonialEditMode = false;
 let currentTestimonialEditDocId = null;
+let db, storage, appId, currentUserRole;
 
 // --- Helper Functions (Private to this module) ---
 
@@ -64,6 +66,8 @@ function resetTestimonialForm() {
     currentTestimonialEditDocId = null;
     submitTestimonialBtn.textContent = 'Add Testimonial';
     cancelTestimonialEditBtn.classList.add('hidden');
+    testimonialFormMessage.classList.add('hidden');
+    console.log("Form reset. Ready for new testimonial entry.");
 }
 
 async function editTestimonial(docId, data) {
@@ -71,21 +75,24 @@ async function editTestimonial(docId, data) {
     currentTestimonialEditDocId = docId;
     testimonialNameInput.value = data.name;
     testimonialTitleInput.value = data.title;
-    testimonialQuoteInput.value = data.quote;
+    testimonialTextInput.value = data.testimonial; 
     testimonialPriorityInput.value = data.priority;
     
     submitTestimonialBtn.textContent = 'Update Testimonial';
     cancelTestimonialEditBtn.classList.remove('hidden');
     
     testimonialForm.scrollIntoView({ behavior: 'smooth' });
+    console.log(`Editing testimonial with ID: ${docId}`);
 }
 
 async function deleteTestimonial(docId, photoUrl) {
+    console.log(`Attempting to delete testimonial with ID: ${docId}`);
     const confirmed = await showConfirmation('Are you sure you want to delete this testimonial?');
     if (!confirmed) return;
     
     try {
         if (photoUrl) {
+            console.log("Deleting photo from storage:", photoUrl);
             const photoRef = ref(storage, photoUrl);
             await deleteObject(photoRef);
         }
@@ -93,23 +100,28 @@ async function deleteTestimonial(docId, photoUrl) {
         await deleteDoc(doc(db, `artifacts/${appId}/public/data/testimonials/${docId}`));
         
         showAlert("Testimonial deleted successfully!");
+        console.log("Testimonial deletion successful.");
     } catch (error) {
         console.error("Error deleting testimonial:", error);
         showAlert("An error occurred while deleting.");
     }
 }
 
-async function handleTestimonialFormSubmit(e, db, storage, appId) {
+async function handleTestimonialFormSubmit(e) {
     e.preventDefault();
+    console.log("Testimonial form submitted.");
+
     testimonialFormMessage.classList.add('hidden');
 
     const name = testimonialNameInput.value;
     const title = testimonialTitleInput.value;
-    const quote = testimonialQuoteInput.value;
+    const testimonial = testimonialTextInput.value; // Updated field
     const priority = parseInt(testimonialPriorityInput.value, 10);
     const photoFile = testimonialPhotoFile.files[0];
 
-    if (!name || !title || !quote) {
+    console.log("Form data captured:", { name, title, testimonial, priority, photoFile: photoFile ? photoFile.name : 'No file' });
+
+    if (!name || !title || !testimonial) {
         showAlert("Please fill in all required fields.");
         return;
     }
@@ -124,10 +136,13 @@ async function handleTestimonialFormSubmit(e, db, storage, appId) {
     try {
         let photoUrl;
         if (photoFile) {
+            console.log("Uploading new photo to storage...");
             const storageRef = ref(storage, `testimonials/${Date.now()}-${photoFile.name}`);
             await uploadBytes(storageRef, photoFile);
             photoUrl = await getDownloadURL(storageRef);
+            console.log("Photo upload complete. URL:", photoUrl);
         } else if (isTestimonialEditMode) {
+            console.log("No new photo selected. Retaining existing photo URL.");
             const existingDoc = await getDoc(doc(db, `artifacts/${appId}/public/data/testimonials/${currentTestimonialEditDocId}`));
             photoUrl = existingDoc.data().photoUrl;
         }
@@ -135,11 +150,13 @@ async function handleTestimonialFormSubmit(e, db, storage, appId) {
         const newTestimonial = {
             name,
             title,
-            quote,
+            testimonial,
             priority: isNaN(priority) ? 0 : priority,
             photoUrl,
             timestamp: Date.now()
         };
+
+        console.log("Final testimonial data to be saved:", newTestimonial);
 
         const docRef = isTestimonialEditMode
             ? doc(db, `artifacts/${appId}/public/data/testimonials/${currentTestimonialEditDocId}`)
@@ -171,10 +188,10 @@ export function initializeTestimonialsAdmin(dbInstance, storageInstance, appIden
     showConfirmation = confirmFunc;
 
     // Set up the real-time listener for testimonials
-    // const testimonialsRef = collection(db, `artifacts/${appId}/public/data/testimonials`);
-	const testimonialsRef = collection(db, `/testimonials`);
-    // const userDocRef = doc(db, 'users', user.uid);
-	onSnapshot(testimonialsRef, (snapshot) => {
+    console.log("Initializing Testimonials Admin module.");
+    const testimonialsRef = collection(db, `artifacts/${appId}/public/data/testimonials`);
+    onSnapshot(testimonialsRef, (snapshot) => {
+        console.log("onSnapshot listener triggered for testimonials admin list.");
         const testimonials = [];
         snapshot.forEach(doc => {
             testimonials.push({ id: doc.id, ...doc.data() });
@@ -190,12 +207,13 @@ export function initializeTestimonialsAdmin(dbInstance, storageInstance, appIden
             const testimonialCard = createTestimonialCard(data.id, data, currentUserRole);
             testimonialsList.appendChild(testimonialCard);
         });
+        console.log(`Admin list updated. Found ${testimonials.length} testimonials.`);
     }, (error) => {
         console.error("Error fetching testimonials:", error);
         showAlert('Failed to load testimonials.');
     });
 
     // Attach event listeners to the form and buttons
-    testimonialForm.addEventListener('submit', (e) => handleTestimonialFormSubmit(e, db, storage, appId));
+    testimonialForm.addEventListener('submit', handleTestimonialFormSubmit);
     cancelTestimonialEditBtn.addEventListener('click', resetTestimonialForm);
 }
