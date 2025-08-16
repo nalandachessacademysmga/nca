@@ -36,42 +36,24 @@ let currentIndex = 0;
  * @param {object} data - The testimonial object containing name, title, etc.
  * @returns {string} - The HTML string for the testimonial card.
  */
-/* 
 function createTestimonialCard(data) {
-    return `
-        <div class="testimonial-card p-6 md:p-8 bg-white shadow-lg rounded-xl flex flex-col justify-between h-full">            
-            <div class="flex items-center mt-auto">
-                <img src="${data.photoUrl}" alt="${data.name}" class="w-16 h-16 rounded-full object-cover border-2 border-purple-500 mr-4">
-                <div>
-                    <p class="font-bold text-gray-900 text-lg">${data.name}</p>
-                    <p class="text-sm text-gray-600">${data.title}</p>
-                </div>
-            </div>
-			<p class="text-xl md:text-2xl italic text-gray-700 mb-6 leading-relaxed">
-                "${data.testimonial}"
-            </p>
-        </div>
-    `;
-} */
-
-function createTestimonialCard(data) {
-    return `
-        <div class="testimonial-card p-6 md:p-8 bg-white shadow-lg rounded-xl flex flex-col justify-between h-1/2 relative">
-			<div class="absolute top-4 right-4 text-gray-200 text-6xl">
-				“
-			</div>
-			<div class="flex items-center mt-auto">
-				<img src="${data.photoUrl}" alt="${data.name}" class="w-16 h-16 rounded-full object-cover border-2 border-purple-500 mr-4">
-				<div>
-					<p class="font-bold text-gray-900 text-lg">${data.name}</p>
-					<p class="text-sm text-gray-600">${data.title}</p>
-				</div>
-			</div>
-			<p class="text-xl md:text-2xl italic text-gray-700 mb-6 leading-relaxed">
-				"${data.testimonial}"
-			</p>
-		</div>
-    `;
+  return `
+	  <div class="testimonial-card p-6 md:p-8 bg-radial-gradient rounded-xl shadow-lg flex flex-col justify-between w-full flex-shrink-0 snap-center">
+          <i class="fas fa-quote-left text-purple-400 text-3xl mb-4"></i>
+          
+          <p class="text-lg md:text-xl italic text-gray-700 leading-relaxed">
+              "${data.testimonial}"
+          </p>
+          
+          <div class="flex items-center mt-6">
+              <img src="${data.photoUrl}" alt="${data.name}" class="w-16 h-16 rounded-full object-cover border-2 border-purple-500 mr-4">
+              <div>
+                  <p class="font-bold text-gray-900 text-lg">${data.name}</p>
+                  <p class="text-sm text-gray-600">${data.title}</p>
+              </div>
+          </div>
+      </div>	  
+  `;
 }
 
 /**
@@ -80,53 +62,53 @@ function createTestimonialCard(data) {
 function updateCarouselDisplay() {
   if (testimonials.length === 0) {
     carouselContainer.innerHTML = `<p class="text-center text-gray-500">No testimonials to display yet.</p>`;
-    prevButton.classList.add('hidden');
-    nextButton.classList.add('hidden');
+    if (prevButton) prevButton.classList.add('hidden');
+    if (nextButton) nextButton.classList.add('hidden');
     return;
   }
 
-    // Clear the container before re-rendering the cards
-    carouselContainer.innerHTML = '';
+  // Clear the container before re-rendering the cards
+  carouselContainer.innerHTML = '';
     
-    // Render all testimonials and add them to the container
-    testimonials.forEach((testimonial, index) => {
-        const cardHtml = createTestimonialCard(testimonial);
-        carouselContainer.innerHTML += cardHtml;
-    });
+  // Render all testimonials and add them to the container
+  testimonials.forEach((testimonial, index) => {
+    const cardHtml = createTestimonialCard(testimonial);
+    carouselContainer.innerHTML += cardHtml;
+  });
 
-    // Get the newly created cards and handle visibility
-    const cards = document.querySelectorAll('#testimonial-carousel-container .testimonial-card');
-    cards.forEach((card, index) => {
-        if (index === currentIndex) {
-            card.classList.remove('hidden');
-        } else {
-            card.classList.add('hidden');
-        }
-    });
+  // Get the newly created cards and handle visibility
+  const cards = document.querySelectorAll('#testimonial-carousel-container .testimonial-card');
+  cards.forEach((card, index) => {
+    if (index === currentIndex) {
+      card.classList.remove('hidden');
+    } else {
+      card.classList.add('hidden');
+    }
+  });
 
-    // Update button visibility
-    if (prevButton) prevButton.disabled = currentIndex === 0;
-    if (nextButton) nextButton.disabled = currentIndex === testimonials.length - 1;
+  // Update button visibility
+  if (prevButton) prevButton.disabled = currentIndex === 0;
+  if (nextButton) nextButton.disabled = currentIndex === testimonials.length - 1;
 }
 
 /**
  * Handles the "next" button click event.
  */
 function showNextTestimonial() {
-    if (currentIndex < testimonials.length - 1) {
-        currentIndex++;
-        updateCarouselDisplay();
-    }
+  if (currentIndex < testimonials.length - 1) {
+    currentIndex++;
+    updateCarouselDisplay();
+  }
 }
 
 /**
  * Handles the "previous" button click event.
  */
 function showPrevTestimonial() {
-    if (currentIndex > 0) {
-        currentIndex--;
-        updateCarouselDisplay();
-    }
+  if (currentIndex > 0) {
+    currentIndex--;
+    updateCarouselDisplay();
+  }
 }
 
 // --- Main Execution Logic ---
