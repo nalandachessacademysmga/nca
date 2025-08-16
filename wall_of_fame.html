@@ -20,7 +20,7 @@
             color: #8b5cf6;
         }
         .wall-of-fame-card {
-            flex: 0 0 auto; /* Added to make cards not grow and shrink */
+            flex: 0 0 auto;
             width: 300px; /* Fixed width for horizontal scrolling */
             transition: transform 0.3s ease-in-out;
         }
@@ -43,22 +43,21 @@
     <div id="header-placeholder"></div>
 
     <!-- Main Content Area -->
-    <main class="p-4 md:p-8 flex-grow pb-20 md:pb-8">
+    <main class="p-2 md:p-4 flex-grow pb-10 md:pb-4">
 
         <!-- Wall of Fame Section Title -->
-        <section class="max-w-6xl mx-auto text-center py-8">
+        <section class="max-w-6xl mx-auto text-center py-2">
             <h1 class="text-4xl font-extrabold text-gray-800 mb-2">WALL OF FAME</h1>
-            <h3 class="text-xl text-gray-600 font-semibold">Celebrating Our Champions and Their Achievements</h3>
+            <h3 class="text-xl text-gray-600 font-semibold">Celebrating Our Champions</h3>
         </section>
 
-        <div class="relative max-w-6xl mx-auto my-4">
-            <div id="wall-of-fame-container" class="flex flex-nowrap gap-4 overflow-x-auto no-scrollbar py-2">
-                </div>
+        <div class="relative mx-auto mt-2 flex flex-grow">
+			<div id="wall-of-fame-container" class="flex flex-nowrap gap-4 overflow-x-auto no-scrollbar py-2 flex-grow"></div>				           
             
-            <button id="prev-btn" class="absolute top-1/2 -left-6 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full shadow-lg hover:bg-gray-700 focus:outline-none md:flex hidden">
+            <button id="prev-btn" class="absolute top-1/2 -left-6 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full shadow-lg hover:bg-gray-700 focus:outline-none md:flex hidden" type="button" title="Previous Card">
                 <i class="fas fa-chevron-left"></i>
             </button>
-            <button id="next-btn" class="absolute top-1/2 -right-6 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full shadow-lg hover:bg-gray-700 focus:outline-none md:flex hidden">
+            <button id="next-btn" class="absolute top-1/2 -right-6 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full shadow-lg hover:bg-gray-700 focus:outline-none md:flex hidden" type="button" title="Next Card">
                 <i class="fas fa-chevron-right"></i>
             </button>
         </div>

@@ -31,15 +31,15 @@ const nextBtn = document.getElementById('next-btn');
  * @returns {string} - The HTML string for the card.
  */
 function createWallOfFameCard(data) {
-    const dateEvent = (data.date && data.event) ? `${data.date} - ${data.event}` : (data.date || data.event);
-    
+  const dateEvent = (data.date && data.event) ? `${data.date} - ${data.event}` : (data.date || data.event);
+
     return `
-        <div class="wall-of-fame-card bg-white rounded-lg shadow-xl overflow-hidden transform transition-transform duration-300 hover:scale-105">
-            <img src="${data.photoUrl}" alt="${data.title}" class="w-full">
-            <div class="p-4">
+        <div class="wall-of-fame-card bg-white rounded-lg shadow-xl transform transition-transform duration-300 hover:scale-105 flex flex-col w-full lg:w-[410px] overflow-y-auto">
+            <img src="${data.photoUrl}" alt="${data.title}" class="w-full h-auto object-cover flex-none">
+            <div class="p-4 flex flex-col flex-grow relative">
                 <h3 class="text-xl font-bold text-gray-800 mb-1">${data.title}</h3>
-                <p class="text-gray-600 text-sm mb-1">${dateEvent}</p>
-                <p class="text-gray-700 leading-relaxed text-sm line-clamp-3">
+                <p class="text-gray-600 text-base mb-1">${dateEvent}</p>
+                <p class="text-gray-700 leading-relaxed text-base">
                     ${data.description}
                 </p>
             </div>
@@ -76,15 +76,15 @@ function setupWallOfFameListener() {
             return;
         }
 
-        console.log(`Found ${snapshot.size} achievement(s).`);
-        wallOfFameContainer.innerHTML = '';
-        
-        snapshot.forEach(doc => {
-            const data = doc.data();
-            const cardHtml = createWallOfFameCard(data);
-            wallOfFameContainer.innerHTML += cardHtml;
-        });
-        console.log("Wall of Fame cards rendered.");
+        console.log(`Found ${snapshot.size} achievement(s).`);
+        wallOfFameContainer.innerHTML = '';
+        
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            const cardHtml = createWallOfFameCard(data);
+            wallOfFameContainer.innerHTML += cardHtml;
+        });
+        console.log("Wall of Fame cards rendered.");
 
         // Add event listeners for navigation buttons after content is loaded
         if (prevBtn && nextBtn) {
