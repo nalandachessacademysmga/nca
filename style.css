@@ -28,6 +28,8 @@ html, body {
     }
 }
 
+
+
 /* Styling for the Chessboard Container */
 #board {
     width: 100%; /* Make the board responsive to its parent container */
@@ -104,8 +106,13 @@ button {
     }
 }
 
-/* New custom styles for the Contact Us section */
+/* Testimonial Card - BG Gradient style */
+.bg-radial-gradient {
+	/* background-image: radial-gradient(circle at center, #ffffff 0%, #f3f4f6 100%); */
+	background-image: radial-gradient(circle at center, #ccc4e5 0%, #5063a9 100%);
+}
 
+/* custom styles for the Contact Us section */
 body {
     background: linear-gradient(to bottom right, #f9fafb, #e5e7eb);
     color: #1f2937;
@@ -263,5 +270,17 @@ body {
 .contact-form button:hover {
     background-color: #7c3aed;
     transform: scale(1.05);
+}
+
+/* Custom class to hide the vertical scrollbar */
+.hide-scrollbar {
+	overflow-y: scroll;
+	-ms-overflow-style: none; /* IE and Edge */
+	scrollbar-width: none;    /* Firefox */
+}
+
+/* WebKit browsers (Chrome, Safari) */
+.hide-scrollbar::-webkit-scrollbar {
+	display: none;
 }
 
