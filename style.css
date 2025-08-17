@@ -284,3 +284,12 @@ body {
 	display: none;
 }
 
+/* Styles for the full-screen modal (Gallery Items) */
+#image-modal-overlay {
+	opacity: 0;
+	transition: opacity 0.3s ease-in-out;
+}
+
+#image-modal-overlay button {
+	outline: none;
+}
