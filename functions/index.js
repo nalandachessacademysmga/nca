@@ -9,12 +9,12 @@ const express = require('express');
 // Set global options for function deployment
 setGlobalOptions({ maxInstances: 10 });
 
-// Configure your email service provider
+// Configure your email service provider using process.env
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: functions.config().gmail.email,
-        pass: functions.config().gmail.password
+        user: process.env.GMAIL_EMAIL,
+        pass: process.env.GMAIL_PASSWORD
     }
 });
 
@@ -37,8 +37,8 @@ app.post('/', (req, res) => {
     }
 
     const mailOptions = {
-        from: `Nalanda Chess Academy <${functions.config().gmail.email}>`,
-        to: 'nalandachessacademysmga@gmail.com', // Replace with the recipient's email
+        from: `Nalanda Chess Academy <${process.env.GMAIL_EMAIL}>`,
+        to: 'nalandachessacademysmga@gmail.com',
         subject: 'New Message from Contact Form',
         html: `
             <p><strong>Name:</strong> ${name}</p>
