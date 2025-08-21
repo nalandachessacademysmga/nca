@@ -7,7 +7,7 @@
       "**/node_modules/**"
     ],
     "rewrites": [
-	  {
+      {
         "source": "/admin",
         "destination": "/admin-utility.html"
       },
@@ -46,5 +46,18 @@
   },
   "database": {
     "rules": "database.rules.json"
-  }
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ]
+    }
+  ]
 }
