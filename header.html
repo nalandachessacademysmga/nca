@@ -1,6 +1,20 @@
 <!-- This is the header file (header.html) which is dynamically loaded by the main page. -->
 <!-- It contains both the desktop and mobile header layouts, managed by Tailwind CSS's responsive classes. -->
 <!-- It also includes the navigation links and the authentication modal which are required by the main script. -->
+<style>
+    /* Add a media query to handle very small mobile screens */
+    @media (max-width: 480px) {
+        .bottom-nav-label {
+            display: none;
+        }
+        .bottom-nav-icon {
+            font-size: 1.5rem;
+        }
+        .bottom-nav-link {
+            padding: 0.5rem;
+        }
+    }
+</style>
 
 <!-- Desktop Header (Visible on screens >= 1024px) -->
 <!-- Medium devices to mobile devices to have mobile header. Details below  -->
