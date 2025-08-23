@@ -293,3 +293,17 @@ body {
 #image-modal-overlay button {
 	outline: none;
 }
+
+/* Update the CSS with a media query */
+@media (max-width: 480px) {
+    /* For screens smaller than 480px, hide the text and adjust icon size */
+    .bottom-nav-label {
+        display: none;
+    }
+    .bottom-nav-icon {
+        font-size: 1.5rem; /* You can adjust the icon size as needed */
+    }
+    .bottom-nav-link {
+        padding: 0.5rem; /* Adjust padding for a cleaner look */
+    }
+}
