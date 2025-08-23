@@ -130,7 +130,7 @@
 
             try {
                 // Replace <project-id> with your actual Firebase project ID
-                const res = await fetch('https://us-central1-nalandachessacademy-474db.cloudfunctions.net/sendEmail', {
+                const res = await fetch('/contact', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(body),
