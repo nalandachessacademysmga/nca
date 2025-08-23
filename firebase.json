@@ -7,6 +7,14 @@
       "**/node_modules/**"
     ],
     "rewrites": [
+	  {
+        "source": "/contact",
+        "function": "sendEmail"
+      },
+      {
+        "source": "/enquiry",
+        "function": "sendEmail"
+      },
       {
         "source": "/admin",
         "destination": "/admin-utility.html"
