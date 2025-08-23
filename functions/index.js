@@ -27,19 +27,23 @@ app.use(cors({ origin: true }));
 // Parse incoming request bodies as JSON
 app.use(express.json());
 
-// Define the route for your contact form submission
-app.post('/', (req, res) => {
+// Define the route for the contact form
+app.post('/contact', (req, res) => {
+    //logger.info('Contact form POST request received.', { structuredData: true });
+    
     const { name, email, phone, message } = req.body;
+    //logger.info('Received data for contact form:', { name, email, phone, message });
 
     // Validate that required fields are present
     if (!name || !email || !message) {
-        return res.status(400).send('Bad Request: Missing required fields (name, email, message)');
+        //logger.error('Bad Request: Missing required fields for contact form.');
+        return res.status(400).send('Bad Request: Missing required fields');
     }
 
     const mailOptions = {
         from: `Nalanda Chess Academy <${process.env.GMAIL_EMAIL}>`,
         to: 'nalandachessacademysmga@gmail.com',
-        subject: 'New Message from Contact Form',
+        subject: 'NCA - Contact Form',
         html: `
             <p><strong>Name:</strong> ${name}</p>
             <p><strong>Email:</strong> ${email}</p>
@@ -50,11 +54,45 @@ app.post('/', (req, res) => {
 
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
-            logger.error('Error sending email:', error);
+            //logger.error('Error sending contact email:', error);
             return res.status(500).send(error.toString());
         }
-        logger.info('Email sent:', { structuredData: true });
+        //logger.info('Contact email sent successfully!');
         return res.status(200).send('Message sent successfully!');
+    });
+});
+
+// Define the NEW route for the admission enquiry form
+app.post('/enquiry', (req, res) => {
+    //logger.info('Admission enquiry POST request received.', { structuredData: true });
+    
+    const { name, email, phone, course } = req.body;
+    //logger.info('Received data for enquiry form:', { name, email, phone, course });
+
+    if (!name || !email || !phone || !course) {
+        //logger.error('Bad Request: Missing required fields for enquiry form.');
+        return res.status(400).send('Bad Request: Missing required fields');
+    }
+
+    const mailOptions = {
+        from: `Nalanda Chess Academy <${process.env.GMAIL_EMAIL}>`,
+        to: 'nalandachessacademysmga@gmail.com',
+		subject: 'NCA - Admission Enquiry Form',
+        html: `
+            <p><strong>Name:</strong> ${name}</p>
+            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Phone:</strong> ${phone}</p>
+            <p><strong>Interested Course:</strong> ${course}</p>
+        `
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            //logger.error('Error sending enquiry email:', error);
+            return res.status(500).send(error.toString());
+        }
+        //logger.info('Enquiry email sent:', { structuredData: true });
+        return res.status(200).send('Enquiry sent successfully!');
     });
 });
 
