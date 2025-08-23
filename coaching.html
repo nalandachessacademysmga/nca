@@ -58,6 +58,19 @@
         .input-error {
             border-color: #ef4444; /* red-500 */
         }
+
+        /* Modal specific styles */
+        .modal {
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+        .modal.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .modal.visible {
+            opacity: 1;
+            visibility: visible;
+        }
     </style>
 </head>
 <body class="bg-gray-100 antialiased flex flex-col min-h-screen">
@@ -416,21 +429,31 @@
                 formStatus.textContent = 'Our Consultant will help you with your query.';
                 formStatus.classList.add('text-green-500');
 
-                // Simulate form submission to an API endpoint
-                // This is a placeholder. You need to replace it with a real backend service.
-                console.log('Form Data:', {
-                    firstName,
-                    lastName,
-                    phone,
-                    email,
-                    courseLevel
-                });
+                // === START: API Submission Logic ===
+                const formData = {
+                    name: `${firstName} ${lastName}`,
+                    email: email,
+                    phone: phone,
+                    course: courseLevel
+                };
 
                 try {
-                    await new Promise(resolve => setTimeout(resolve, 2000));
-                    formStatus.textContent = 'Your enquiry has been submitted. Our team will contact you shortly.';
-                    formStatus.classList.add('text-green-500');
-                    admissionForm.reset();
+                    // Use the correct endpoint for your new form
+                    const response = await fetch('/enquiry', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(formData),
+                    });
+
+                    if (response.ok) {
+                        formStatus.textContent = 'Your enquiry has been submitted. Our team will contact you shortly.';
+                        formStatus.classList.add('text-green-500');
+                        admissionForm.reset();
+                    } else {
+                        throw new Error('Server responded with an error.');
+                    }
                 } catch (error) {
                     console.error('Submission failed:', error);
                     formStatus.textContent = 'Something went wrong. Please try again.';
@@ -439,6 +462,7 @@
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'SUBMIT';
                 }
+                // === END: API Submission Logic ===
             } else {
                 formStatus.textContent = 'Please correct the errors above before submitting.';
                 formStatus.classList.add('text-red-500');
