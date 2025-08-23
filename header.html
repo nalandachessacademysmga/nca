@@ -2,8 +2,9 @@
 <!-- It contains both the desktop and mobile header layouts, managed by Tailwind CSS's responsive classes. -->
 <!-- It also includes the navigation links and the authentication modal which are required by the main script. -->
 
-<!-- Desktop Header (Visible on screens >= 768px) -->
-<header class="bg-gradient-to-r from-gray-800 to-gray-900 text-white shadow-lg sticky top-0 z-50 hidden md:block">
+<!-- Desktop Header (Visible on screens >= 1024px) -->
+<!-- Medium devices to mobile devices to have mobile header. Details below  -->
+<header class="bg-gradient-to-r from-gray-800 to-gray-900 text-white shadow-lg sticky top-0 z-50 hidden lg:block">
     <div class="container mx-auto px-6 py-4 flex items-center justify-between">
         <!-- Logo and Site Title for Desktop -->
         <div class="flex items-center">
@@ -11,8 +12,7 @@
             <h1 class="text-3xl font-extrabold rounded-md p-2 bg-white bg-opacity-20">Nalanda Chess Academy</h1>
         </div>
 
-        <!-- Desktop Navigation Links (visible on medium screens and up, hidden on small screens)-->
-        <nav class="hidden md:flex space-x-6 items-center">
+        <nav class="flex space-x-6 items-center">
             <a href="index.html" id="home-link-desktop" class="hover:text-purple-400 transition-colors duration-300 px-3 py-2 rounded-lg">Home</a>
             <a href="events.html" id="events-link-desktop" class="hover:text-purple-400 transition-colors duration-300 px-3 py-2 rounded-lg">Events</a>
             <a href="gallery.html" id="gallery-link-desktop" class="hover:text-purple-400 transition-colors duration-300 px-3 py-2 rounded-lg">Gallery</a>
@@ -24,8 +24,8 @@
     </div>
 </header>
 
-<!-- Mobile Header (Visible on screens < 768px) -->
-<header class="bg-gradient-to-r from-gray-800 to-gray-900 text-white shadow-lg sticky top-0 z-50 block md:hidden">
+<!-- Mobile Header (Visible on screens (both medium and mobile devices) < 1024px) -->
+<header class="bg-gradient-to-r from-gray-800 to-gray-900 text-white shadow-lg sticky top-0 z-50 block lg:hidden">
     <div class="container relative mx-auto px-4 py-3 flex items-center justify-start">
         <!-- Mobile Logo on the left -->
         <img src="https://firebasestorage.googleapis.com/v0/b/nalandachessacademy-474db-7w9pw/o/app_assets%2Flogo.png?alt=media&token=16e4d26b-7d39-4f2b-b082-f609c0904f41" alt="Nalanda Chess Academy Logo" class="h-8 w-auto rounded-md">
@@ -36,7 +36,7 @@
 </header>
 
 <!-- Bottom Fixed Navigation for Mobile -->
-<nav class="fixed bottom-0 left-0 right-0 md:hidden bg-gray-900 text-white z-50">
+<nav class="fixed bottom-0 left-0 right-0 lg:hidden bg-gray-900 text-white z-50">
     <ul class="flex justify-around items-center h-16">
         <li>
             <a href="index.html" class="flex flex-col items-center justify-center p-2 rounded-lg text-sm text-gray-400 hover:text-purple-400">
