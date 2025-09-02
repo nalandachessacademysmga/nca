@@ -69,11 +69,27 @@
     <!-- Placeholder for the dynamically loaded header -->
     <div id="header-placeholder"></div>
 
-    <main class="p-2 md:p-4 flex-grow pb-10 md:pb-4">
-        
+    <main class="p-2 md:p-4 flex-grow pb-10 md:pb-4">        
         <section class="max-w-6xl mx-auto py-8">
             <h1 class="text-4xl font-extrabold text-gray-800 text-center mb-4">CONTACT US</h1>
             <p class="text-lg text-gray-600 text-center mb-8">Have a question or want to join us? Send us a message!</p>
+
+			<!-- Corrected alignment to display contact info in a column with reduced gap -->
+            <div class="flex flex-col justify-center items-center gap-2 mb-8 text-center">
+                <a href="mailto:nalandachessacademysmga@gmail.com" class="flex items-center text-gray-700 hover:text-purple-600 transition-colors">
+                    <i class="fas fa-envelope mr-2 text-xl"></i>
+                    <span class="text-lg">nalandachessacademysmga@gmail.com</span>
+                </a>
+                <a href="mailto:srikrishnaudupa8@gmail.com" class="flex items-center text-gray-700 hover:text-purple-600 transition-colors">
+                    <i class="fas fa-envelope mr-2 text-xl"></i>
+                    <span class="text-lg">srikrishnaudupa8@gmail.com</span>
+                </a>
+                <a href="tel:+919844436276" class="flex items-center text-gray-700 hover:text-purple-600 transition-colors">
+                    <i class="fas fa-phone-alt mr-2 text-xl"></i>
+                    <span class="text-lg">+91 98444 36276</span>
+                </a>
+            </div>		
+            
 
             <form id="contactForm">
                 <input type="text" name="name" required placeholder="Your Name">
