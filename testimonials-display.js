@@ -41,7 +41,7 @@ function createTestimonialCard(data) {
 	  <div class="testimonial-card p-6 md:p-8 bg-radial-gradient rounded-xl shadow-lg flex flex-col justify-between w-full flex-shrink-0 snap-center">
           <i class="fas fa-quote-left text-purple-400 text-3xl mb-4"></i>
           
-          <p class="text-lg md:text-xl italic text-gray-700 leading-relaxed">
+          <p class="text-lg md:text-xl italic text-gray-900 leading-relaxed">
               "${data.testimonial}"
           </p>
           
@@ -49,7 +49,7 @@ function createTestimonialCard(data) {
               <img src="${data.photoUrl}" alt="${data.name}" class="w-16 h-16 rounded-full object-cover border-2 border-purple-500 mr-4">
               <div>
                   <p class="font-bold text-gray-900 text-lg">${data.name}</p>
-                  <p class="text-sm text-gray-600">${data.title}</p>
+                  <p class="text-sm text-gray-900">${data.title}</p>
               </div>
           </div>
       </div>	  
