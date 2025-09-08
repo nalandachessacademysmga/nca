@@ -40,6 +40,7 @@ const menuItems = {
     'WallOfFame': { file: 'admin-walloffame-content.html', logicFile: 'admin-walloffame-logic.js', role: ['admin', 'editor'], icon: 'fas fa-trophy' },
     'Testimonials': { file: 'admin-testimonials-content.html', logicFile: 'admin-testimonials-logic.js', role: ['admin', 'editor'], icon: 'fas fa-comment-alt' },
     'Users': { file: 'admin-users-content.html', logicFile: 'admin-users-logic.js', role: ['admin'], icon: 'fas fa-users' },
+    'ConfCall': { file: 'admin-confcall-content.html', logicFile: 'admin-confcall-logic.js', role: ['admin', 'editor'], icon: 'fas fa-video' },
 };
 
 // Function to render the menu based on the user's role
@@ -59,11 +60,14 @@ function renderMenu(role) {
 // Function to load the content for the selected menu item
 async function loadContent(section) {
     console.log(`[DEBUG] Attempting to load content for section: "${section}"`);
-    const sectionConfig = menuItems[section.charAt(0).toUpperCase() + section.slice(1)];
-    if (!sectionConfig) {
+    console.log(`[DEBUG] Keys in menuItems object: ${Object.keys(menuItems).join(', ')}`);
+    const sectionConfigKey = Object.keys(menuItems).find(key => key.toLowerCase() === section);
+    console.log(`[DEBUG] Matched key: "${sectionConfigKey}"`);
+    if (!sectionConfigKey) {
         console.warn(`[DEBUG] No configuration found for section: "${section}"`);
         return;
     }
+    const sectionConfig = menuItems[sectionConfigKey];
 
     try {
         const response = await fetch(sectionConfig.file);
@@ -72,13 +76,18 @@ async function loadContent(section) {
         
         console.log(`[DEBUG] Successfully fetched content from file: "${sectionConfig.file}"`);
         
-        // Dynamically load and execute the corresponding script for the content section
-        const script = document.createElement('script');
-        script.src = sectionConfig.logicFile;
-        script.type = 'module';
-        dashboardContent.appendChild(script);
+        if (sectionConfig.logicFile) {
+            console.log(`[DEBUG] Attempting to load logic file: "${sectionConfig.logicFile}"`);
+            // Dynamically load and execute the corresponding script for the content section
+            const script = document.createElement('script');
+            script.src = sectionConfig.logicFile;
+            script.type = 'module';
+            dashboardContent.appendChild(script);
 
-        console.log(`[DEBUG] Script element added: "${script.src}"`);
+            console.log(`[DEBUG] Script element added: "${script.src}"`);
+        } else {
+            console.log(`[DEBUG] No logic file specified for section: "${section}"`);
+        }
 
     } catch (error) {
         console.error(`[DEBUG] Failed to load content for ${section}:`, error);
@@ -92,6 +101,7 @@ onAuthStateChanged(auth, async (user) => {
         try {
             const userDoc = await getDoc(doc(db, 'users', user.uid));
             const userRole = userDoc.exists() ? userDoc.data().role : null;
+            console.log(`[DEBUG] User authenticated. UID: ${user.uid}, Role: ${userRole}`);
 
             if (userRole && ['admin', 'editor'].includes(userRole)) {
                 // User is authenticated and has a valid role. Show the dashboard.
