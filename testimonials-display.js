@@ -62,14 +62,13 @@ function createTestimonialCard(data) {
 function updateCarouselDisplay() {
   if (testimonials.length === 0) {
     carouselContainer.innerHTML = `<p class="text-center text-gray-500">No testimonials to display yet.</p>`;
-    if (prevButton) prevButton.classList.add('hidden');
-    if (nextButton) nextButton.classList.add('hidden');
+    // No need to hide or disable buttons here, as they'll remain on the page.
     return;
   }
 
   // Clear the container before re-rendering the cards
   carouselContainer.innerHTML = '';
-    
+  
   // Render all testimonials and add them to the container
   testimonials.forEach((testimonial, index) => {
     const cardHtml = createTestimonialCard(testimonial);
@@ -85,28 +84,26 @@ function updateCarouselDisplay() {
       card.classList.add('hidden');
     }
   });
-
-  // Update button visibility
-  if (prevButton) prevButton.disabled = currentIndex === 0;
-  if (nextButton) nextButton.disabled = currentIndex === testimonials.length - 1;
+  
+  // No need to update button visibility as they will always be enabled
 }
 
 /**
- * Handles the "next" button click event.
+ * Handles the "next" button click event, cycling through testimonials.
  */
 function showNextTestimonial() {
-  if (currentIndex < testimonials.length - 1) {
-    currentIndex++;
+  if (testimonials.length > 0) {
+    currentIndex = (currentIndex + 1) % testimonials.length;
     updateCarouselDisplay();
   }
 }
 
 /**
- * Handles the "previous" button click event.
+ * Handles the "previous" button click event, cycling through testimonials.
  */
 function showPrevTestimonial() {
-  if (currentIndex > 0) {
-    currentIndex--;
+  if (testimonials.length > 0) {
+    currentIndex = (currentIndex - 1 + testimonials.length) % testimonials.length;
     updateCarouselDisplay();
   }
 }
@@ -120,12 +117,10 @@ function showPrevTestimonial() {
 function setupTestimonialsListener() {
     console.log("Setting up testimonials listener...");
     const testimonialsCollectionRef = collection(db, `artifacts/${appId}/public/data/testimonials`);
-	// const testimonialsCollectionRef = collection(db, `data/testimonials`);
-	console.log("Testimonials collection reference:", testimonialsCollectionRef); // This is the new log.
-	
-    // const q = query(testimonialsCollectionRef, orderBy('priority'), orderBy('timestamp', 'desc'));
-	const q = query(testimonialsCollectionRef, orderBy('timestamp', 'desc'));
-	// const q = testimonialsCollectionRef; // Test Query NRN
+    console.log("Testimonials collection reference:", testimonialsCollectionRef);
+    
+    const q = query(testimonialsCollectionRef, orderBy('timestamp', 'desc'));
+
     onSnapshot(q, (snapshot) => {
         console.log("onSnapshot listener triggered. Checking data...");
         testimonials = [];
