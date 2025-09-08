@@ -85,25 +85,29 @@
                 </p>
             </div>
         </div>
-    </section>
-
+    </section>				
+	
 	<!-- Testimonials Section -->
 	<section id="testimonials-section" class="w-full p-4 rounded-lg shadow-2xl mt-0 container mx-auto">
 		<h2 class="text-3xl font-bold text-gray-800 mb-2 text-center">Testimonials</h2>
 		
 		<div class="relative mx-auto">
-			<div id="testimonial-carousel-container" class="overflow-hidden min-h-[200px] flex items-center justify-center">
+			<div id="testimonial-carousel-container" class="overflow-hidden min-h-[200px] flex items-center justify-center px-12">
 				<p class="text-center font-semibold p-6 text-gray-900">Loading testimonials...</p>
 			</div>
 
-			<button id="testimonial-prev-btn" class="absolute top-1/2 -left-10 transform -translate-y-1/2 bg-white text-gray-800 p-3 rounded-full hover:bg-gray-300 transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
-				<i class="fas fa-chevron-left"></i>
+			<button id="testimonial-prev-btn" class="absolute inset-y-0 left-0 w-1/4 flex items-center justify-start px-2 bg-transparent transition-colors shadow-none disabled:opacity-50 disabled:cursor-not-allowed group">
+				<span class="p-3 rounded-full bg-transparent text-gray-800 transition-transform group-hover:scale-110 shadow-lg">
+					<i class="fas fa-chevron-left"></i>
+				</span>
 			</button>
-			<button id="testimonial-next-btn" class="absolute top-1/2 -right-10 transform -translate-y-1/2 bg-white text-gray-800 p-3 rounded-full hover:bg-gray-300 transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
-				<i class="fas fa-chevron-right"></i>
-			</button>
+			<button id="testimonial-next-btn" class="absolute inset-y-0 right-0 w-1/4 flex items-center justify-end px-2 bg-transparent transition-colors shadow-none disabled:opacity-50 disabled:cursor-not-allowed group">
+				<span class="p-3 rounded-full bg-transparent text-gray-800 transition-transform group-hover:scale-110 shadow-lg">
+					<i class="fas fa-chevron-right"></i>
+				</span>
+			</span>
 		</div>
-	</section>	
+	</section>
 	
 	<!-- New: About Nalanda Chess Academy Section - Full Width, Tight Spacing -->
     <section id="about-section" class="w-full mt-8 flex flex-col items-center justify-center py-4">
