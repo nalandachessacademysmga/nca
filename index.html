@@ -97,6 +97,34 @@
         </div>
     </section>				
 	
+    <!-- YouTube Channel Section -->
+    <section id="youtube-section" class="w-full p-8 bg-gray-900 text-white mt-6 flex flex-col items-center justify-center rounded-lg shadow-2xl container mx-auto">
+        <h2 class="text-3xl font-bold mb-4 text-center">Watch & Learn on Our YouTube Channel</h2>
+        <p class="text-lg text-center mb-8 max-w-2xl">
+            Dive into our library of free chess videos. Learn new strategies, analyze grandmaster games, and get tactical training tips from our expert coaches. Subscribe to stay updated!
+        </p>
+        <!-- The container now uses `aspect-video` for a clean 16:9 ratio -->
+        <div class="aspect-video w-full max-w-4xl rounded-lg shadow-xl overflow-hidden">
+            <!-- The iframe now has no fixed width or height and uses Tailwind's w-full and h-full to fill its parent -->
+			<!-- The youtube-iframe will be replaced with the latest video from NalandaChessAcademy youtube channel -->
+			<iframe
+                id="youtube-iframe"
+				src="about:blank"
+				title="YouTube video player"
+				frameborder="0"
+				allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+				referrerpolicy="strict-origin-when-cross-origin"
+				allowfullscreen
+                class="w-full h-full"
+            ></iframe>
+        </div>
+		
+        <a href="https://www.youtube.com/@NalandaChessAcademyShimoga" target="_blank" class="mt-6 bg-red-600 text-white px-8 py-3 rounded-full text-xl font-bold shadow-xl hover:bg-red-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-red-300 flex items-center space-x-2">
+            <i class="fab fa-youtube text-2xl"></i>
+            <span>Visit Our YouTube Channel</span>
+        </a>
+    </section>
+	
 	<!-- Testimonials Section -->
 	<section id="testimonials-section" class="w-full p-4 rounded-lg shadow-2xl mt-0 container mx-auto">
 		<h2 class="text-3xl font-bold text-gray-800 mb-2 text-center">Testimonials</h2>
@@ -440,7 +468,40 @@
 	<script type="module" src="script.js"></script>
 	<script type="module" src="chess-logic.js" defer></script>	
 	
-    
+    <!-- New script to fetch and display the latest YouTube video -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const youtubeIframe = document.getElementById('youtube-iframe');            
+			const youtubeChannelId = 'UCMIP4U6FS8fZlUQFfKumZ5g';		            
+            const apiKey = 'AIzaSyCk_rLUd1e524L6AuFjmqnimRS3LzYqFYc'; 
+
+            // Function to fetch the latest video
+            const fetchLatestVideo = async () => {             
+                const apiUrl = `https://www.googleapis.com/youtube/v3/search?key=${apiKey}&channelId=${youtubeChannelId}&part=snippet,id&order=date&maxResults=1`;
+                
+                try {
+                    const response = await fetch(apiUrl);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    
+                    if (data.items && data.items.length > 0) {
+                        const videoId = data.items[0].id.videoId;
+                        const newSrc = `https://www.youtube.com/embed/${videoId}?rel=0`;
+                        youtubeIframe.src = newSrc;
+                    } else {
+                        console.log('No videos found on the channel.');
+                    }
+                } catch (error) {
+                    console.error('Error fetching latest YouTube video:', error);
+                }
+            };
+
+            fetchLatestVideo();
+        });
+    </script>
+	
 	<!-- Service Worker Registration -->
 	<!-- Disabled Caching Temporarily Ravi TBD
     <script>
