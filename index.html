@@ -27,16 +27,26 @@
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
-    
-    <!-- Chess.js for chess logic -->
-    <!-- A JavaScript library that handles the rules of chess (moves, check, checkmate, etc.). -->
-    <script src="https://unpkg.com/chess.js@1.0.0-beta.7/chess.min.js"></script>
-    
-    <!-- chessboard.js for board visualization -->
-    <!-- A JavaScript library for displaying and interacting with a chess board visually. -->
-    <script src="https://unpkg.com/@chrisoakley/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/@chrisoakley/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css">
+    <!-- Chessboard CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chessboard-js/1.0.0/chessboard-1.0.0.min.css">	
 	
+    <style>
+        /* Simple styling for the puzzle section */
+        #chess-section { margin: 40px 0; }
+        #board { margin: 20px 0; }
+        #move-list { margin-top: 10px; font-family: monospace; }
+    </style>
+    
+	<!-- 1. Chessboard.js (UI library) -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chessboard-js/1.0.0/chessboard-1.0.0.min.js"></script>
+
+<!-- 2. chess.js (board logic) -->
+<script type="module" src="https://cdn.jsdelivr.net/npm/chess.js@latest/chess.js"></script>
+
+<!-- 3. Stockfish.js (engine worker) -->
+<script src="https://cdn.jsdelivr.net/npm/stockfish.js@latest/stockfish.js"></script>
+	   	
 </head>
 <body class="bg-gray-100 font-sans antialiased flex flex-col min-h-screen">
 
@@ -109,7 +119,7 @@
 		</div>
 	</section>
 	
-	<!-- New: About Nalanda Chess Academy Section - Full Width, Tight Spacing -->
+	<!-- About Nalanda Chess Academy Section - Full Width, Tight Spacing -->
     <section id="about-section" class="w-full mt-8 flex flex-col items-center justify-center py-4">
         <h2 class="text-3xl font-bold text-gray-800 mb-0 text-center">About Us</h2>
         <div class="flex flex-col md:flex-row items-center md:space-x-8 w-full shadow-2xl overflow-hidden rounded-lg container mx-auto bg-white p-3">
@@ -125,6 +135,57 @@
             </div>
         </div>
     </section>
+
+    <!-- *** NEW: Chess Puzzle Section *** -->
+    <section id="chess-section" class="page-section hidden">
+        <h2>Chess Puzzle</h2>
+        <p>Enter a FEN string to set up the board, then drag pieces to solve the puzzle.</p>
+
+        <label for="fenInput">FEN:</label>
+        <input type="text" id="fenInput"
+               placeholder="e.g. r1bqkbnr/pppppppp/n7/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+               size="60">
+        <button id="loadBtn">Load Position</button>
+
+        <div id="board" style="width: 400px;"></div>
+
+        <div id="status"><strong>FEN:</strong> <span id="current-fen"></span></div>
+        <div id="move-list"><strong>Move list:</strong> <span id="moves"></span></div>
+    </section>
+
+    <!-- Play Chess Section -->
+    <section id="play-chess-section" class="w-full hidden mt-8 py-4 flex flex-col items-center justify-center bg-gray-100 rounded-lg shadow-2xl container mx-auto">
+        <h2 class="text-3xl font-bold text-gray-800 mb-4 text-center">Play Against Stockfish</h2>
+        <div class="container mt-8 flex flex-col items-center">
+            <div class="board-container">
+                <div id="board" style="width: 500px"></div>
+            </div>
+            <div class="controls mt-8 p-4 bg-white rounded-lg shadow-md w-full max-w-lg">
+                <h3 class="text-xl font-bold text-gray-800 mb-2">Board Controls</h3>
+                <div class="input-group mb-4">
+                    <label for="fen-input" class="block text-gray-700 font-semibold mb-1">Load Position (FEN):</label>
+                    <textarea id="fen-input" rows="3" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400" placeholder="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"></textarea>
+                </div>
+                <div class="btn-group flex space-x-4 mb-4">
+                    <button id="load-btn" class="flex-1 bg-purple-600 text-white font-bold py-2 px-4 rounded-full shadow-md hover:bg-purple-700 transition duration-300">Load FEN</button>
+                    <button id="copy-btn" class="flex-1 bg-gray-600 text-white font-bold py-2 px-4 rounded-full shadow-md hover:bg-gray-700 transition duration-300">Copy FEN</button>
+                </div>
+                
+                <h3 class="text-xl font-bold text-gray-800 mb-2 mt-6">Stockfish Engine</h3>
+                <div class="input-group mb-4">
+                    <label for="depth-input" class="block text-gray-700 font-semibold mb-1">Search Depth:</label>
+                    <input type="number" id="depth-input" value="15" min="1" max="30" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400">
+                </div>
+                <button id="stockfish-btn" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-full w-full shadow-md hover:bg-blue-700 transition duration-300">Get Best Move</button>
+                <div class="status-message text-center mt-4 text-gray-700 font-semibold">
+                    <span id="thinking-indicator" class="hidden">Thinking...</span>
+                    <span id="best-move"></span>
+                </div>
+                <button id="reset-btn" class="bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full mt-4 shadow-md hover:bg-red-700 transition duration-300">Reset Board</button>
+            </div>
+        </div>
+    </section>
+
 
     <!-- Main Content Area -->
     <!-- Removed container mx-auto from main to allow sections outside it to be full width -->
@@ -373,10 +434,12 @@
                 console.log("User logged out");
             }
         });
-    </script>
-    <script type="module" src="testimonials-display.js" defer></script>
+    </script>    	    
     
-    <script src="script.js"></script>	
+	<script type="module" src="testimonials-display.js" defer></script>	
+	<script type="module" src="script.js"></script>
+	<script type="module" src="chess-logic.js" defer></script>	
+	
     
 	<!-- Service Worker Registration -->
 	<!-- Disabled Caching Temporarily Ravi TBD
